@@ -19,6 +19,7 @@ Compiling 002-function-returning-itself.swift under swift-600.0.47.8: Compiler c
 Compiling 003-sequencetype.swift under swift-600.0.47.8: Compiler crashed.
 Compiling 004-function-taking-itself-as-argument.swift under swift-600.0.47.8: Compiler crashed.
 Compiling 005-recursive-call.swift under swift-600.0.47.8: Compiler crashed.
+Compiling 006-placeholder-property-initializer-with-closure.swift under swift-600.0.47.8: Compiler crashed.
 ```
 
 Contributor hall of fame
