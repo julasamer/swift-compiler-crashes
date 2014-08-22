@@ -1,15 +1,14 @@
 class A {
-	var value: Int?
-	init() {}
+    init() {
+    }
 }
 
 extension A {
-	convenience init(i: Int?) {
-		self.init()
-		value = i
-	}
-	convenience init(s: String?) {
-		self.init(i: s?.toInt())
-	}
+    convenience init(i: Int) {
+        self.init()
+    }
+    convenience init(s: String) {
+        self.init(i: 1)
+    }
 }
 
