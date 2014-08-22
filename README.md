@@ -16,7 +16,7 @@ $ cd swift-compiler-crashes/crashes/
 $ ./run_crashing_test_cases.sh
 Compiling 001-protocol-conforming-to-itself.swift under swift-600.0.47.8: Compiler crashed.
 Compiling 002-function-returning-itself.swift under swift-600.0.47.8: Compiler crashed.
-Compiling 003-crash-minimized.swift under swift-600.0.47.8: Compiler crashed.
+Compiling 003-sequencetype.swift under swift-600.0.47.8: Compiler crashed.
 Compiling 004-function-taking-itself-as-argument.swift under swift-600.0.47.8: Compiler crashed.
 Compiling 005-recursive-call.swift under swift-600.0.47.8: Compiler crashed.
 ```
