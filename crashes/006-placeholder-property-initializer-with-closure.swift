@@ -1,9 +1,7 @@
-func initializer(clos: () -> () ) -> String {
-  return ""
+func initializer(closure: () -> ()) {
 }
 
-class Crash 
-{
-  var _ = initializer() {}
+class Crash {
+    var _ = initializer() {
+    }
 }
-
