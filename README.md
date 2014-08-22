@@ -25,5 +25,6 @@ Compiling 006-placeholder-property-initializer-with-closure.swift under swift-60
 Contributor hall of fame
 ========================
 
-* <a href="https://github.com/practicalswift">practicalswift</a> (<a href="https://twitter.com/practicalswift">@practicalswift</a>), 5 crashes contributed
-* <a href="https://github.com/AlexDenisov">AlexDenisov</a> (<a href="https://twitter.com/1101_debian">@1101_debian</a>), 1 crash contributed
+* <a href="https://github.com/practicalswift">practicalswift</a> (<a href="https://twitter.com/practicalswift">@practicalswift</a>), 8 crashes contributed
+* <a href="https://github.com/AlexDenisov">AlexDenisov</a> (Alexey Denisov, <a href="https://twitter.com/1101_debian">@1101_debian</a>), 1 crash contributed
+* <a href="https://github.com/0xc010d">0xc010d</a> (Ievgen Solodovnykov, <a href="https://twitter.com/0xc010d">@0xc010d</a>), 1 crash contributed
