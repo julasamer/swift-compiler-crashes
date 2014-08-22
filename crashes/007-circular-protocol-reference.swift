@@ -1,9 +1,7 @@
-protocol d {
-    var c: b {
-        get
-    }
+protocol a {
+    func c(b: b)
 }
-
+ 
 protocol b {
-    func a(d)
+    func d(a: a)
 }
