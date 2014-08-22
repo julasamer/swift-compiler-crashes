@@ -20,3 +20,9 @@ Compiling 003-sequencetype.swift under swift-600.0.47.8: Compiler crashed.
 Compiling 004-function-taking-itself-as-argument.swift under swift-600.0.47.8: Compiler crashed.
 Compiling 005-recursive-call.swift under swift-600.0.47.8: Compiler crashed.
 ```
+
+Contributor hall of fame
+========================
+
+* <a href="https://github.com/practicalswift">practicalswift</a> (<a href="https://twitter.com/practicalswift">@practicalswift</a>), 5 crashes contributed
+* <a href="https://github.com/AlexDenisov">AlexDenisov</a> (<a href="https://twitter.com/1101_debian">@1101_debian</a>), 1 crash contributed
