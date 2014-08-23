@@ -18,7 +18,7 @@ $ ./test.sh
 Running tests against: swift-600.0.47.8
     Using Xcode found at path: /Applications/Xcode6-Beta6.app/Contents/Developer/
 
-== Currently Known Crashes ==
+== Currently known crashes ==
 
     ✘  001 protocol conforming to itself
     ✘  002 function returning itself
@@ -42,10 +42,11 @@ Running tests against: swift-600.0.47.8
     ✘  020 class extending itself
     ✘  021 generic class referencing itself
     ✘  022 generic class referencing itself with verbose syntax
+    ✘  023 calling func with default params via let or var
 
-== Crashes Fixed in Previous Release ==
+== Crashes marked as fixed in previous releases ==
 
-** CRASH-TESTS FAILED: 22 of 22 crashed **
+** Results: 23 of 23 tests crashed the compiler. **
 
 ```
 
