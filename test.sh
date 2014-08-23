@@ -29,21 +29,21 @@ format_pass="  %b  %-$name_size.${name_size}b\n"
 do_test() {
   path="$1"
   
-  if [ -f $path ]; then
+  if [ -f ${path} ]; then
     num_tests=$((num_tests + 1))
-    test_name=$(basename -s ".swift" "$path")
+    test_name=$(basename -s ".swift" ${path})
     test_name=${test_name//-/ }
     
-    output=$(xcrun swiftc $path 2>&1)
+    output=$(xcrun swiftc ${path} 2>&1)
     
     md5=$(echo $output | md5)
     
     $(echo $output | egrep -q "error: unable to execute command: Segmentation fault:")
     if [ $? == 0 ]; then
       num_crashed=$((num_crashed + 1))
-      printf "$format_fail" "${color_red}✘${color_stop}" "$test_name" "$md5"
+      printf "${format_fail}" "${color_red}✘${color_stop}" "${test_name}" "${md5}"
     else
-      printf "$format_pass" "${color_green}✓${color_stop}" "$test_name" 
+      printf "${format_pass}" "${color_green}✓${color_stop}" "${test_name}" 
     fi
   fi
 }
@@ -53,27 +53,18 @@ run_tests() {
   path="$2"
 
   echo
-  echo "== $header =="
+  echo "== ${header} =="
   echo
   
-  for test_path in $path/*.swift
+  for test_path in ${path}/*.swift
   do
-    do_test $test_path
+    do_test ${test_path}
   done
 
 }
 
-show_results() {
-  if [ $num_crashed == 0 ]; then
-    echo "** CRASH-TESTS PASSED **"
-    echo
-  else
-    echo "** CRASH-TESTS FAILED: $num_crashed of $num_tests crashed **"
-    echo
-  fi
-}
+run_tests "Currently known crashes" "./crashes"
+run_tests "Crashes marked as fixed in previous releases" "./fixed"
 
-run_tests "Currently Known Crashes" "./crashes"
-run_tests "Crashes Fixed in Previous Release" "./fixed"
-
-show_results
+echo "** Results: ${num_crashed} of ${num_tests} tests crashed the compiler. **"
+echo

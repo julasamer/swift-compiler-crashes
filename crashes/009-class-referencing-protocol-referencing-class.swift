@@ -4,5 +4,5 @@ protocol b {
     }
 }
 
-class c<d:b> {
+class c<d : b> {
 }
