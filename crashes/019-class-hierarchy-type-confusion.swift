@@ -19,5 +19,5 @@ class C: B, A {
 }
 
 func e<T where T: A, T: B>(t: T) {
-    let g = t.c() + t.d()
+    t.c()
 }
