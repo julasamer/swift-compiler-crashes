@@ -1,12 +1,19 @@
 #!/bin/bash
 
+xcode_path=$(xcode-select -p)
 swiftc_version=$(xcrun swiftc -version | cut -f2 -d"(" | cut -f1 -d")" | head -1)
 
 echo
-echo "Running tests against swiftc: $swiftc_version"
+echo "Running tests against: $swiftc_version"
+echo "    Using Xcode found at path: $xcode_path"
 
 num_crashed=0
 num_tests=0
+
+color_red="\e[01;31m"
+color_green="\e[32m"
+color_stop="\e[00m"
+
 
 do_test() {
   path="$1"
@@ -20,9 +27,9 @@ do_test() {
 
     if [ $? == 0 ]; then
       num_crashed=$((num_crashed + 1))
-      echo "    ✘  $test_name"
+      printf "    ${color_red}✘${color_stop}  $test_name\n"
     else
-      echo "    ✓  $test_name"
+      printf "    ${color_green}✓${color_stop}  $test_name\n"
     fi
   fi
 }

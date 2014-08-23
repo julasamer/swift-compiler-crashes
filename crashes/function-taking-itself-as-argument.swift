@@ -1,1 +1,2 @@
-func x(x)
+func x(x) {
+}

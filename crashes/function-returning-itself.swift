@@ -1,1 +1,2 @@
-func a() -> a
+func a() -> a {
+}
