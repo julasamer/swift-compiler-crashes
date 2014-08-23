@@ -12,18 +12,28 @@ Getting started
 
 ```
 $ git clone https://github.com/practicalswift/swift-compiler-crashes.git
-$ cd swift-compiler-crashes/crashes/
-$ ./run_crashing_test_cases.sh
-Compiling 001-protocol-conforming-to-itself.swift under swift-600.0.47.8: Compiler crashed.
-Compiling 002-function-returning-itself.swift under swift-600.0.47.8: Compiler crashed.
-Compiling 003-sequencetype.swift under swift-600.0.47.8: Compiler crashed.
-Compiling 004-function-taking-itself-as-argument.swift under swift-600.0.47.8: Compiler crashed.
-Compiling 005-recursive-call.swift under swift-600.0.47.8: Compiler crashed.
-Compiling 006-placeholder-property-initializer-with-closure.swift under swift-600.0.47.8: Compiler crashed.
-Compiling 007-convenience-init-in-extension.swift under swift-600.0.47.8: Compiler crashed.
-Compiling 008-boolean-operator.swift under swift-600.0.47.8: Compiler crashed.
-Compiling 009-class-referencing-protocol-referencing-class.swift under swift-600.0.47.8: Compiler crashed.
-Compiling 010-circular-protocol-reference.swift under swift-600.0.47.8: Compiler crashed.
+$ cd swift-compiler-crashes/
+$ ./test.sh
+
+Running tests against swiftc: swift-600.0.47.8
+
+== Currently Known Crashes ==
+
+    ✘  protocol conforming to itself
+    ✘  function returning itself
+    ✘  sequencetype
+    ✘  function taking itself as argument
+    ✘  recursive call
+    ✘  placeholder property initializer with closure
+    ✘  convenience init in extension
+    ✘  boolean operator
+    ✘  class referencing protocol referencing class
+    ✘  circular protocol reference
+
+== Crashes Fixed in Previous Release ==
+
+** CRASH-TESTS FAILED: 10 of 10 crashed **
+
 ```
 
 Contributor hall of fame
