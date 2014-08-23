@@ -48,8 +48,10 @@ Running tests against: swift-600.0.47.8
 Contributor hall of fame
 ========================
 
-* <a href="https://github.com/practicalswift">practicalswift</a> (<a href="https://twitter.com/practicalswift">@practicalswift</a>), 14 crashes contributed
-* <a href="https://github.com/0xc010d">0xc010d</a> (Ievgen Solodovnykov, <a href="https://twitter.com/0xc010d">@0xc010d</a>), 1 crash contributed
-* <a href="https://github.com/AlexDenisov">AlexDenisov</a> (Alexey Denisov, <a href="https://twitter.com/1101_debian">@1101_debian</a>), 1 crash contributed
-* <a href="https://github.com/jvasileff">jvasileff</a> (John Vasileff, <a href="https://twitter.com/jvasileff">@jvasileff</a>), 1 crash contributed
-* <a href="https://github.com/owensd">owensd</a> (David Owens II, <a href="https://twitter.com/owensd">@owensd</a>), 1 crash contributed
+| Contributor  | Twitter  | Test Cases Contributed |
+| :------------ |:---------------:| -----:|
+| <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 14 test cases |
+| <a href="https://github.com/0xc010d">0xc010d</a> – Ievgen Solodovnykov | <a href="https://twitter.com/0xc010d">@0xc010d</a> | 1 test case |
+| <a href="https://github.com/AlexDenisov">AlexDenisov</a> – Alexey Denisov | <a href="https://twitter.com/1101_debian">@1101_debian</a> | 1 test case |
+| <a href="https://github.com/jvasileff">jvasileff</a> – John Vasileff | <a href="https://twitter.com/jvasileff">@jvasileff</a> | 1 test case |
+| <a href="https://github.com/owensd">owensd</a> – David Owens II | <a href="https://twitter.com/owensd">@owensd</a> | 1 test case |
