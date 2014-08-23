@@ -3,9 +3,7 @@ protocol a {
 }
 
 class b: a {
-    class func c() {
-    }
+    class func c() { }
 }
 
-var d: a = b()
-d.dynamicType.c()
+(b() as a).dynamicType.c()
