@@ -11,4 +11,3 @@ extension A {
         self.init(i: 1)
     }
 }
-
