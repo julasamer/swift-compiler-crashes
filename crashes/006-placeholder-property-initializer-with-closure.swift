@@ -1,4 +1,4 @@
-func i(closure: () -> ()) {
+func i(c: () -> ()) {
 }
 
 class a {
