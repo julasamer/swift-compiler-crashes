@@ -29,11 +29,11 @@ format_pass="  %b  %-${name_size}.${name_size}b\n"
 do_test() {
   path="$1"
   
-  if [ -f ${path} ]; then
+  if [ -f "${path}" ]; then
     num_tests=$((num_tests + 1))
     test_name=$(basename -s ".swift" "${path}")
     test_name=${test_name//-/ }
-    output=$(xcrun swiftc ${path} 2>&1)
+    output=$(xcrun swiftc "${path}" 2>&1)
     md5=$(md5 <<< "${output}")
     $(egrep -q "error: unable to execute command: Segmentation fault:" <<< "${output}")
     if [ $? == 0 ]; then
@@ -53,7 +53,7 @@ run_tests() {
   echo "== ${header} =="
   echo
   
-  for test_path in ${path}/*.swift
+  for test_path in "${path}"/*.swift
   do
     do_test "${test_path}"
   done
