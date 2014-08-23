@@ -1,7 +1,7 @@
-func initializer(closure: () -> ()) {
+func i(closure: () -> ()) {
 }
 
-class Crash {
-    var _ = initializer() {
+class a {
+    var _ = i() {
     }
 }

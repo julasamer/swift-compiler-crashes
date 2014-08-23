@@ -1,6 +1,5 @@
-
-func foo<T>() {
-    enum Crash {
-        case Burn
+func a<T>() {
+    enum b {
+        case c
     }
 }

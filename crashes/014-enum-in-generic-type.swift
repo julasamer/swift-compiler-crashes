@@ -1,5 +1,5 @@
 class a<T> {
-  enum b {
-    case c
-  }
+    enum b {
+        case c
+    }
 }
