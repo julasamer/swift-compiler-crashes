@@ -1,10 +1,9 @@
 protocol a {
-    class func c() -> String
+    class func c()
 }
 
 class b: a {
-    class func c() -> String {
-        return ""
+    class func c() {
     }
 }
 
