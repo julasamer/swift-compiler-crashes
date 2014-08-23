@@ -20,6 +20,10 @@ Compiling 003-sequencetype.swift under swift-600.0.47.8: Compiler crashed.
 Compiling 004-function-taking-itself-as-argument.swift under swift-600.0.47.8: Compiler crashed.
 Compiling 005-recursive-call.swift under swift-600.0.47.8: Compiler crashed.
 Compiling 006-placeholder-property-initializer-with-closure.swift under swift-600.0.47.8: Compiler crashed.
+Compiling 007-convenience-init-in-extension.swift under swift-600.0.47.8: Compiler crashed.
+Compiling 008-boolean-operator.swift under swift-600.0.47.8: Compiler crashed.
+Compiling 009-class-referencing-protocol-referencing-class.swift under swift-600.0.47.8: Compiler crashed.
+Compiling 010-circular-protocol-reference.swift under swift-600.0.47.8: Compiler crashed.
 ```
 
 Contributor hall of fame
