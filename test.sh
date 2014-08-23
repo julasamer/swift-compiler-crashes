@@ -33,12 +33,9 @@ do_test() {
     num_tests=$((num_tests + 1))
     test_name=$(basename -s ".swift" ${path})
     test_name=${test_name//-/ }
-    
     output=$(xcrun swiftc ${path} 2>&1)
-    
-    md5=$(echo $output | md5)
-    
-    $(echo $output | egrep -q "error: unable to execute command: Segmentation fault:")
+    md5=$(md5 <<< "${output}")
+    $(egrep -q "error: unable to execute command: Segmentation fault:" <<< "${output}")
     if [ $? == 0 ]; then
       num_crashed=$((num_crashed + 1))
       printf "${format_fail}" "${color_red}✘${color_stop}" "${test_name}" "${md5}"
