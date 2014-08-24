@@ -15,6 +15,9 @@ color_green="\e[32m"
 color_stop="\e[00m"
 
 columns=$(tput cols)
+if [ "$(cut -f1 -d= <<< $1)" == "--columns" ]; then
+    columns="$(cut -f2 -d= <<< $1)"
+fi
 
 #
 # Test results should be logged as this (+---...---+ is the width of terminal):
