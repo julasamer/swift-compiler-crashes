@@ -1,3 +1,5 @@
+// http://www.openradar.me/17929884
+
 protocol A {
     func c() -> String
 }

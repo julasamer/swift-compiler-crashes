@@ -1,3 +1,5 @@
+// http://www.openradar.me/17501507
+
 protocol A {
     typealias B
     func b(B)
