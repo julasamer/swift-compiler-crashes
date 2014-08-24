@@ -34,7 +34,11 @@ do_test() {
     test_name=$(basename -s ".swift" "${path}")
     test_name=${test_name//-/ }
     output=$(xcrun swiftc "${path}" 2>&1)
-    md5=$(md5 <<< "${output}")
+    normalized_stacktrace=$(egrep "0x[0-9a-f]" <<< "${output}" | sed 's/0x[0-9a-f]*//g' | sed 's/\+ [0-9]*$//g' | awk '{ print $3 }' | cut -f1 -d"(" | cut -f1 -d"<" | uniq)
+    md5=$(md5 <<< "${normalized_stacktrace}")
+    if [ "${normalized_stacktrace}" == "" ]; then
+        md5="        "
+    fi
     $(egrep -q "error: unable to execute command: Segmentation fault:" <<< "${output}")
     if [ $? == 0 ]; then
       num_crashed=$((num_crashed + 1))
