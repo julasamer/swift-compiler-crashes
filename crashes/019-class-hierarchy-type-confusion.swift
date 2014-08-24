@@ -1,4 +1,5 @@
 // http://www.openradar.me/17929884
+// https://twitter.com/joshaber/status/496833803160416256
 
 protocol A {
     func c() -> String
