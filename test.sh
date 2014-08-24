@@ -36,6 +36,7 @@ do_test() {
     num_tests=$((num_tests + 1))
     test_name=$(basename -s ".swift" "${path}")
     test_name=${test_name//-/ }
+    # Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
     output=$(xcrun swiftc "${path}" 2>&1)
     normalized_stacktrace=$(egrep "0x[0-9a-f]" <<< "${output}" | sed 's/0x[0-9a-f]*//g' | sed 's/\+ [0-9]*$//g' | awk '{ print $3 }' | cut -f1 -d"(" | cut -f1 -d"<" | uniq)
     md5=$(md5 <<< "${normalized_stacktrace}")
