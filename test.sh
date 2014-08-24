@@ -7,8 +7,8 @@ echo "Running tests against: ${swiftc_version}"
 echo "Using Xcode found at path: ${xcode_path}"
 
 columns=$(tput cols)
-if [ "$(cut -f1 -d= <<< $1)" == "--columns" ]; then
-    columns="$(cut -f2 -d= <<< $1)"
+if [ "$(cut -f1 -d= <<< "$1")" == "--columns" ]; then
+    columns="$(cut -f2 -d= <<< "$1")"
 fi
 name_size=$((columns-27))
 
@@ -37,17 +37,15 @@ do_test() {
     color_red="\e[01;31m"
     color_green="\e[32m"
     color_stop="\e[00m"
-    format_fail="  %b  %-${name_size}.${name_size}b %-6.6b (%-10.10b)\n"
-    format_pass="  %b  %-${name_size}.${name_size}b\n"
     if egrep -q "error: unable to execute command: Segmentation fault:" <<< "${output}"; then
       num_crashed=$((num_crashed + 1))
       dupe_text="      "
       if [ $is_dupe == 1 ]; then
           dupe_text="*DUPE*"
       fi
-      printf "${format_fail}" "${color_red}✘${color_stop}" "${test_name}" "${dupe_text}" "${checksum}"
+      printf "  %b  %-${name_size}.${name_size}b %-6.6b (%-10.10b)\n" "${color_red}✘${color_stop}" "${test_name}" "${dupe_text}" "${checksum}"
     else
-      printf "${format_pass}" "${color_green}✓${color_stop}" "${test_name}" 
+      printf "  %b  %-${name_size}.${name_size}b\n" "${color_green}✓${color_stop}" "${test_name}"
     fi
   fi
 }
