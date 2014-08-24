@@ -1,4 +1,5 @@
 #!/bin/bash
+# Style guide: https://google-styleguide.googlecode.com/svn/trunk/shell.xml
 
 swiftc_version=$(xcrun swiftc -version | cut -f2 -d"(" | cut -f1 -d")" | head -1)
 xcode_path=$(xcode-select -p)
@@ -7,8 +8,8 @@ echo "Running tests against: ${swiftc_version}"
 echo "Using Xcode found at path: ${xcode_path}"
 
 columns=$(tput cols)
-if [ "$(cut -f1 -d= <<< "$1")" == "--columns" ]; then
-    columns="$(cut -f2 -d= <<< "$1")"
+if [[ $(cut -f1 -d= <<< "$1") == "--columns" ]]; then
+  columns=$(cut -f2 -d= <<< "$1")
 fi
 name_size=$((columns-27))
 
@@ -17,7 +18,7 @@ num_crashed=0
 seen_checksums=""
 do_test() {
   path="$1"
-  if [ -f "${path}" ]; then
+  if [[ -f "${path}" ]]; then
     num_tests=$((num_tests + 1))
     test_name=$(basename -s ".swift" "${path}")
     test_name=${test_name//-/ }
@@ -26,7 +27,7 @@ do_test() {
     normalized_stacktrace=$(egrep "0x[0-9a-f]" <<< "${output}" | sed 's/0x[0-9a-f]*//g' | sed 's/\+ [0-9]*$//g' | awk '{ print $3 }' | cut -f1 -d"(" | cut -f1 -d"<" | uniq)
     checksum=$(md5 <<< "${normalized_stacktrace}")
     is_dupe=0
-    if [ "${normalized_stacktrace}" == "" ]; then
+    if [[ "${normalized_stacktrace}" == "" ]]; then
         checksum="        "
     else
         if egrep -q "${checksum}" <<< "${seen_checksums}"; then
@@ -40,7 +41,7 @@ do_test() {
     if egrep -q "error: unable to execute command: Segmentation fault:" <<< "${output}"; then
       num_crashed=$((num_crashed + 1))
       dupe_text="      "
-      if [ $is_dupe == 1 ]; then
+      if [[ $is_dupe == 1 ]]; then
           dupe_text="*DUPE*"
       fi
       printf "  %b  %-${name_size}.${name_size}b %-6.6b (%-10.10b)\n" "${color_red}✘${color_stop}" "${test_name}" "${dupe_text}" "${checksum}"
@@ -56,8 +57,7 @@ run_tests() {
   echo
   echo "== ${header} =="
   echo
-  for test_path in "${path}"/*.swift
-  do
+  for test_path in "${path}"/*.swift; do
     do_test "${test_path}"
   done
 }
