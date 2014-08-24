@@ -1,5 +1,6 @@
 #!/bin/bash
 # Style guide: https://google-styleguide.googlecode.com/svn/trunk/shell.xml
+# Shell lint: http://www.shellcheck.net/
 
 swiftc_version=$(xcrun swiftc -version | cut -f2 -d"(" | cut -f1 -d")" | head -1)
 xcode_path=$(xcode-select -p)
