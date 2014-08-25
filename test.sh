@@ -22,7 +22,7 @@ do_test() {
   files_to_compile="${path}"
   if [[ ${path} =~ part1.swift ]]; then
     files_to_compile=${path//.part1.swift/.part*.swift}
-  elif [[ ${path} =~ part[2-9].swift ]]; then
+  elif [[ ${path} =~ part[0-9]+.swift ]]; then
     return
   fi
   if [[ -f "${path}" ]]; then
