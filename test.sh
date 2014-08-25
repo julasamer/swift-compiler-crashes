@@ -2,6 +2,8 @@
 # Style guide: https://google-styleguide.googlecode.com/svn/trunk/shell.xml
 # Shell lint: http://www.shellcheck.net/
 
+crash_error_message="error: unable to execute command: Segmentation fault:"
+
 swiftc_version=$(xcrun swiftc -version | cut -f2 -d"(" | cut -f1 -d")" | head -1)
 xcode_path=$(xcode-select -p)
 echo
@@ -21,8 +23,8 @@ do_test() {
   path="$1"
   files_to_compile="${path}"
   if [[ ${path} =~ part1.swift ]]; then
-    files_to_compile=${path//.part1.swift/.part*.swift}
-  elif [[ ${path} =~ part[0-9]+.swift ]]; then
+    files_to_compile=${path//.part1.swift/.part[1-9].swift}
+  elif [[ ${path} =~ part[2-9].swift ]]; then
     return
   fi
   if [[ -f "${path}" ]]; then
@@ -31,7 +33,11 @@ do_test() {
     test_name=${test_name//-/ }
     test_name=${test_name//.part1/}
     # Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
-    output=$(xcrun swiftc -o /dev/null ${files_to_compile} 2>&1)
+    # NOTE: First test compiling with "-O" enable. If that does not generate any crash, proceed without "-O".
+    output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
+    if ! egrep -q "${crash_error_message}" <<< "${output}"; then
+        output=$(xcrun swiftc -o /dev/null ${files_to_compile} 2>&1)
+    fi
     normalized_stacktrace=$(egrep "0x[0-9a-f]" <<< "${output}" | sed 's/0x[0-9a-f]*//g' | sed 's/\+ [0-9]*$//g' | awk '{ print $3 }' | cut -f1 -d"(" | cut -f1 -d"<" | uniq)
     checksum=$(md5 <<< "${normalized_stacktrace}")
     is_dupe=0
@@ -46,7 +52,7 @@ do_test() {
     color_red="\e[01;31m"
     color_green="\e[32m"
     color_stop="\e[00m"
-    if egrep -q "error: unable to execute command: Segmentation fault:" <<< "${output}"; then
+    if egrep -q "${crash_error_message}" <<< "${output}"; then
       num_crashed=$((num_crashed + 1))
       dupe_text="      "
       if [[ $is_dupe == 1 ]]; then
