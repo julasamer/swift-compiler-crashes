@@ -33,10 +33,13 @@ do_test() {
     test_name=${test_name//-/ }
     test_name=${test_name//.part1/}
     # Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
-    # NOTE: First test compiling with "-O" enable. If that does not generate any crash, proceed without "-O".
-    output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
+    # NOTE: Compile under the three modes -Onone, -O and -Ounchecked until we hit a crash.
+    output=$(xcrun swiftc -Onone -o /dev/null ${files_to_compile} 2>&1)
     if ! egrep -q "${crash_error_message}" <<< "${output}"; then
-        output=$(xcrun swiftc -o /dev/null ${files_to_compile} 2>&1)
+        output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
+        if ! egrep -q "${crash_error_message}" <<< "${output}"; then
+            output=$(xcrun swiftc -Ounchecked -o /dev/null ${files_to_compile} 2>&1)
+        fi
     fi
     normalized_stacktrace=$(egrep "0x[0-9a-f]" <<< "${output}" | sed 's/0x[0-9a-f]*//g' | sed 's/\+ [0-9]*$//g' | awk '{ print $3 }' | cut -f1 -d"(" | cut -f1 -d"<" | uniq)
     checksum=$(md5 <<< "${normalized_stacktrace}")
