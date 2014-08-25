@@ -19,12 +19,19 @@ num_crashed=0
 seen_checksums=""
 do_test() {
   path="$1"
+  files_to_compile="${path}"
+  if [[ ${path} =~ part1.swift ]]; then
+    files_to_compile=${path//.part1.swift/.part*.swift}
+  elif [[ ${path} =~ part[2-9].swift ]]; then
+    return
+  fi
   if [[ -f "${path}" ]]; then
     num_tests=$((num_tests + 1))
     test_name=$(basename -s ".swift" "${path}")
     test_name=${test_name//-/ }
+    test_name=${test_name//.part1/}
     # Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
-    output=$(xcrun swiftc -o /dev/null "${path}" 2>&1)
+    output=$(xcrun swiftc -o /dev/null ${files_to_compile} 2>&1)
     normalized_stacktrace=$(egrep "0x[0-9a-f]" <<< "${output}" | sed 's/0x[0-9a-f]*//g' | sed 's/\+ [0-9]*$//g' | awk '{ print $3 }' | cut -f1 -d"(" | cut -f1 -d"<" | uniq)
     checksum=$(md5 <<< "${normalized_stacktrace}")
     is_dupe=0
