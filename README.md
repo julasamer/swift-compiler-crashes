@@ -47,12 +47,14 @@ Using Xcode found at path: /Applications/Xcode6-Beta6.app/Contents/Developer/
   ✘  025 populating protocol typealias with generic types         (31c5d7710d)
   ✘  026 extension property referenced from another file          (0d53bc6869)
   ✘  027 void map over sequence (-O)                              (ce61ea1d03)
+  ✘  028 extension property defined in library (lib)              (          )
+  ✘  029 class with anyobject type constraint                     (adce75c94e)
 
 == Crashes marked as fixed in previous releases ==
 
   ✓  No tests found.
 
-** Results: 27 of 27 tests crashed the compiler **
+** Results: 29 of 29 tests crashed the compiler **
 
 ```
 
@@ -61,7 +63,7 @@ Contributor hall of fame
 
 | GitHub contributor | Twitter | Cases contributed | Started contributing |
 | :---------- | :------ | ----------------: | -------------------: |
-| <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 22 test cases | Xcode6-Beta6 |
+| <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 23 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/0xc010d">0xc010d</a> – Ievgen Solodovnykov | <a href="https://twitter.com/0xc010d">@0xc010d</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/AlexDenisov">AlexDenisov</a> – Alexey Denisov | <a href="https://twitter.com/1101_debian">@1101_debian</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/jvasileff">jvasileff</a> – John Vasileff | <a href="https://twitter.com/jvasileff">@jvasileff</a> | 1 test case | Xcode6-Beta6 |
