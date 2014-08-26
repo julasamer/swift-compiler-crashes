@@ -9,12 +9,18 @@ xcode_path=$(xcode-select -p)
 echo
 echo "Running tests against: ${swiftc_version}"
 echo "Using Xcode found at path: ${xcode_path}"
+echo
 
 columns=$(tput cols)
 if [[ $(cut -f1 -d= <<< "$1") == "--columns" ]]; then
   columns=$(cut -f2 -d= <<< "$1")
 fi
 name_size=$((columns-27))
+
+color_red="\e[31m"
+color_green="\e[32m"
+color_bold="\e[1m"
+color_stop="\e[00m"
 
 num_tests=0
 num_crashed=0
@@ -58,13 +64,10 @@ do_test() {
         fi
         seen_checksums="${seen_checksums}:${checksum}"
     fi
-    color_red="\e[01;31m"
-    color_green="\e[32m"
-    color_stop="\e[00m"
     if egrep -q "${crash_error_message}" <<< "${output}"; then
       num_crashed=$((num_crashed + 1))
       dupe_text="      "
-      if [[ $is_dupe == 1 ]]; then
+      if [[ ${is_dupe} == 1 ]]; then
           dupe_text="*DUPE*"
       fi
       printf "  %b  %-${name_size}.${name_size}b %-6.6b (%-10.10b)\n" "${color_red}✘${color_stop}" "${test_name}" "${dupe_text}" "${checksum}"
@@ -77,12 +80,19 @@ do_test() {
 run_tests() {
   header="$1"
   path="$2"
+  printf "== ${color_bold}${header}${color_stop} ==\n"
   echo
-  echo "== ${header} =="
-  echo
+  found_tests=0
   for test_path in "${path}"/*.swift; do
-    do_test "${test_path}"
+    if [[ -f "${test_path}" ]]; then
+      found_tests=1
+      do_test "${test_path}"
+    fi
   done
+  if [[ ${found_tests} == 0 ]]; then
+      printf "  %b  %-${name_size}.${name_size}b\n" "${color_green}✓${color_stop}" "No tests found."
+  fi
+  echo
 }
 
 run_tests "Currently known crashes" "./crashes"
