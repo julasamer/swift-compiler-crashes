@@ -7,7 +7,7 @@ xcode_path=$(xcode-select -p)
 echo
 echo "Running tests against: ${swiftc_version}"
 echo "Using Xcode found at path: ${xcode_path}"
-echo "Usage: $0 [-v] [-c<COLUMNS>]"
+echo "Usage: $0 [-v] [-c<columns>] [file ...]"
 echo
 
 columns=$(tput cols)
@@ -23,11 +23,15 @@ while getopts ":c:v" o; do
   esac
 done
 
-name_size=$((columns-27))
+shift $(expr $OPTIND - 1)
+
 color_red="\e[31m"
 color_green="\e[32m"
 color_bold="\e[1m"
-color_stop="\e[00m"
+color_normal_display="\e[0m"
+
+argument_files=$*
+name_size=$((columns-27))
 crash_error_message="error: unable to execute command: Segmentation fault:"
 num_tests=0
 num_crashed=0
@@ -93,22 +97,22 @@ do_test() {
     if [[ ${is_dupe} == 1 ]]; then
       dupe_text="*DUPE*"
     fi
-    printf "  %b  %-${name_size}.${name_size}b %-6.6b (%-10.10b)\n" "${color_red}✘${color_stop}" "${test_name}" "${dupe_text}" "${checksum}"
+    printf "  %b  %-${name_size}.${name_size}b %-6.6b (%-10.10b)\n" "${color_red}✘${color_normal_display}" "${test_name}" "${dupe_text}" "${checksum}"
   else
-    printf "  %b  %-${name_size}.${name_size}b\n" "${color_green}✓${color_stop}" "${test_name}"
+    printf "  %b  %-${name_size}.${name_size}b\n" "${color_green}✓${color_normal_display}" "${test_name}"
   fi
   if [[ ${verbose} == 1 ]]; then
-      echo
-      echo "Compilation output:"
-      echo "${output}"
-      echo
+    echo
+    echo "Compilation output:"
+    echo "${output}"
+    echo
   fi
 }
 
 run_tests() {
   header="$1"
   path="$2"
-  printf "== ${color_bold}${header}${color_stop} ==\n"
+  printf "== ${color_bold}${header}${color_normal_display} ==\n"
   echo
   found_tests=0
   for test_path in "${path}"/*.swift; do
@@ -118,13 +122,23 @@ run_tests() {
     fi
   done
   if [[ ${found_tests} == 0 ]]; then
-      printf "  %b  %-${name_size}.${name_size}b\n" "${color_green}✓${color_stop}" "No tests found."
+      printf "  %b  %-${name_size}.${name_size}b\n" "${color_green}✓${color_normal_display}" "No tests found."
   fi
   echo
 }
 
-run_tests "Currently known crashes" "./crashes"
-run_tests "Crashes marked as fixed in previous releases" "./fixed"
+if [[ "${argument_files}" == "" ]]; then
+  run_tests "Currently known crashes" "./crashes"
+  run_tests "Crashes marked as fixed in previous releases" "./fixed"
+else
+  for test_path in ${argument_files}; do
+    if [[ -f "${test_path}" ]]; then
+      found_tests=1
+      do_test "${test_path}"
+    fi
+  done
+  echo
+fi
 
 echo "** Results: ${num_crashed} of ${num_tests} tests crashed the compiler **"
 echo
