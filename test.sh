@@ -53,6 +53,7 @@ do_test() {
   test_name=${test_name//-/ }
   test_name=${test_name//.part1/}
   test_name=${test_name//.library1/}
+  test_name=${test_name//.script/}
   # Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
   # NOTE: Compile under the three modes -Onone, -O and -Ounchecked until we hit a crash.
   # TODO: Clean up the mess below. Iterate through optimization levels in for loop instead.
