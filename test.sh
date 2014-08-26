@@ -2,29 +2,37 @@
 # Style guide: https://google-styleguide.googlecode.com/svn/trunk/shell.xml
 # Shell lint: http://www.shellcheck.net/
 
-crash_error_message="error: unable to execute command: Segmentation fault:"
-
 swiftc_version=$(xcrun swiftc -version | cut -f2 -d"(" | cut -f1 -d")" | head -1)
 xcode_path=$(xcode-select -p)
 echo
 echo "Running tests against: ${swiftc_version}"
 echo "Using Xcode found at path: ${xcode_path}"
+echo "Usage: $0 [-v] [-c<COLUMNS>]"
 echo
 
 columns=$(tput cols)
-if [[ $(cut -f1 -d= <<< "$1") == "--columns" ]]; then
-  columns=$(cut -f2 -d= <<< "$1")
-fi
-name_size=$((columns-27))
+verbose=0
+while getopts ":c:v" o; do
+  case "${o}" in
+    c)
+      columns=${OPTARG}
+      ;;
+    v)
+      verbose=1
+      ;;
+  esac
+done
 
+name_size=$((columns-27))
 color_red="\e[31m"
 color_green="\e[32m"
 color_bold="\e[1m"
 color_stop="\e[00m"
-
+crash_error_message="error: unable to execute command: Segmentation fault:"
 num_tests=0
 num_crashed=0
 seen_checksums=""
+
 do_test() {
   path="$1"
   if [[ ! -f "${path}" ]]; then
@@ -88,6 +96,12 @@ do_test() {
     printf "  %b  %-${name_size}.${name_size}b %-6.6b (%-10.10b)\n" "${color_red}✘${color_stop}" "${test_name}" "${dupe_text}" "${checksum}"
   else
     printf "  %b  %-${name_size}.${name_size}b\n" "${color_green}✓${color_stop}" "${test_name}"
+  fi
+  if [[ ${verbose} == 1 ]]; then
+      echo
+      echo "Compilation output:"
+      echo "${output}"
+      echo
   fi
 }
 
