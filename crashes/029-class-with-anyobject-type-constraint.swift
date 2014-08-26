@@ -1,3 +1,2 @@
-class A<D:CollectionType where D:AnyObject> {
+class A<B : CollectionType where B : AnyObject> {
 }
-
