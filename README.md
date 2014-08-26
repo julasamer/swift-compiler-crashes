@@ -1,5 +1,5 @@
-swift-compiler-crashes
-======================
+Project swift-compiler-crashes
+==============================
 
 This repo collects known test cases crashing the Swift compiler. All tests cases in the `crashes/` directory are known to generate a compiler crash under Xcode6-Beta6.
 
@@ -57,7 +57,7 @@ Using Xcode found at path: /Applications/Xcode6-Beta6.app/Contents/Developer/
 Contributor hall of fame
 ========================
 
-| Contributor | Twitter | Cases contributed | Started contributing |
+| GitHub contributor | Twitter | Cases contributed | Started contributing |
 | :---------- | :------ | ----------------: | -------------------: |
 | <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 22 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/0xc010d">0xc010d</a> – Ievgen Solodovnykov | <a href="https://twitter.com/0xc010d">@0xc010d</a> | 1 test case | Xcode6-Beta6 |
