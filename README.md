@@ -27,7 +27,7 @@ Using Xcode found at path: /Applications/Xcode6-Beta6.app/Contents/Developer/
   ✘  005 recursive call                                           (f585534874)
   ✘  006 placeholder property initializer with closure            (ae47cff064)
   ✘  007 convenience init in extension                            (9a574095e0)
-  ✘  008 boolean operator                                         (bc03e1bd3e)
+  ✘  008 boolean operator                                         (734a504575)
   ✘  009 class referencing protocol referencing class             (          )
   ✘  010 circular protocol reference                              (          )
   ✘  011 protocol class func dot type                             (eb2baee868)
@@ -46,10 +46,11 @@ Using Xcode found at path: /Applications/Xcode6-Beta6.app/Contents/Developer/
   ✘  024 parameterized struct with array var initialized t        (4da3a582bb)
   ✘  025 populating protocol typealias with generic types         (697745c3eb)
   ✘  026 extension property referenced from another file          (94ba271262)
+  ✘  027 void map over sequence (-O)                              (a428fd6fd4)
 
 == Crashes marked as fixed in previous releases ==
 
-** Results: 26 of 26 tests crashed the compiler. **
+** Results: 27 of 27 tests crashed the compiler **
 
 ```
 
@@ -63,3 +64,4 @@ Contributor hall of fame
 | <a href="https://github.com/AlexDenisov">AlexDenisov</a> – Alexey Denisov | <a href="https://twitter.com/1101_debian">@1101_debian</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/jvasileff">jvasileff</a> – John Vasileff | <a href="https://twitter.com/jvasileff">@jvasileff</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/owensd">owensd</a> – David Owens II | <a href="https://twitter.com/owensd">@owensd</a> | 1 test case | Xcode6-Beta6 |
+| <a href="https://github.com/tmu">tmu</a> – Teemu Kurppa | <a href="https://twitter.com/Teemu">@Teemu</a> | 1 test case | Xcode6-Beta6 |
