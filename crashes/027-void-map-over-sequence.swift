@@ -1,3 +1,5 @@
+// rdar://18118173
+
 class Set<T: Hashable> {
     typealias Element = T
     var contents : [Element: Bool]
