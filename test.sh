@@ -88,5 +88,5 @@ run_tests() {
 run_tests "Currently known crashes" "./crashes"
 run_tests "Crashes marked as fixed in previous releases" "./fixed"
 
-echo "** Results: ${num_crashed} of ${num_tests} tests crashed the compiler. **"
+echo "** Results: ${num_crashed} of ${num_tests} tests crashed the compiler **"
 echo
