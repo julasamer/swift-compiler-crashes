@@ -63,10 +63,8 @@ do_test() {
     output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
     compilation_comment="-O"
     if ! egrep -q "${crash_error_message}" <<< "${output}"; then
-      output=$(xcrun swiftc -Ounchecked -o /dev/null ${files_to_compile} 2>&1)
-      compilation_comment="-Ounchecked"
-      if ! egrep -q "${crash_error_message}" <<< "${output}" && [[ ${files_to_compile} =~ ".library1" ]] && [[ -f "${files_to_compile//.library1/.library2}" ]]; then
-        source_file_using_library=${files_to_compile//.library1/.library2}
+      if [[ ${files_to_compile} =~ ".library1." ]] && [[ -f "${files_to_compile//.library1./.library2.}" ]]; then
+        source_file_using_library=${files_to_compile//.library1./.library2.}
         compilation_comment=""
         rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
         output=$(xcrun -sdk macosx swiftc -emit-library -o libDummyModule.dylib -Xlinker -install_name -Xlinker @rpath/libDummyModule.dylib -emit-module -emit-module-path DummyModule.swiftmodule -module-name DummyModule -module-link-name DummyModule "${files_to_compile}" 2>&1)
@@ -76,7 +74,7 @@ do_test() {
           compilation_comment="lib"
         fi
         rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
-      elif ! egrep -q "${crash_error_message}" <<< "${output}" && [[ ${files_to_compile} =~ ".script." ]]; then
+      elif [[ ${files_to_compile} =~ ".script." ]]; then
         output_1=$(xcrun swift ${files_to_compile} 2>&1)
         err_1=$?
         output_2=$(xcrun swift -O ${files_to_compile} 2>&1)
