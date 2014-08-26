@@ -27,53 +27,54 @@ num_crashed=0
 seen_checksums=""
 do_test() {
   path="$1"
+  if [[ ! -f "${path}" ]]; then
+    return
+  fi
   files_to_compile="${path}"
   if [[ ${path} =~ part1.swift ]]; then
     files_to_compile=${path//.part1.swift/.part[1-9].swift}
   elif [[ ${path} =~ part[2-9].swift ]]; then
     return
   fi
-  if [[ -f "${path}" ]]; then
-    num_tests=$((num_tests + 1))
-    test_name=$(basename -s ".swift" "${path}")
-    test_name=${test_name//-/ }
-    test_name=${test_name//.part1/}
-    # Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
-    # NOTE: Compile under the three modes -Onone, -O and -Ounchecked until we hit a crash.
-    output=$(xcrun swiftc -Onone -o /dev/null ${files_to_compile} 2>&1)
-    optimization_level=""
+  num_tests=$((num_tests + 1))
+  test_name=$(basename -s ".swift" "${path}")
+  test_name=${test_name//-/ }
+  test_name=${test_name//.part1/}
+  # Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
+  # NOTE: Compile under the three modes -Onone, -O and -Ounchecked until we hit a crash.
+  output=$(xcrun swiftc -Onone -o /dev/null ${files_to_compile} 2>&1)
+  optimization_level=""
+  if ! egrep -q "${crash_error_message}" <<< "${output}"; then
+    output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
+    optimization_level="-O"
     if ! egrep -q "${crash_error_message}" <<< "${output}"; then
-        output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
-        optimization_level="-O"
-        if ! egrep -q "${crash_error_message}" <<< "${output}"; then
-            output=$(xcrun swiftc -Ounchecked -o /dev/null ${files_to_compile} 2>&1)
-            optimization_level="-Ounchecked"
-        fi
+      output=$(xcrun swiftc -Ounchecked -o /dev/null ${files_to_compile} 2>&1)
+      optimization_level="-Ounchecked"
     fi
-    if [[ "${optimization_level}" != "" ]]; then
-        test_name="${test_name} (${optimization_level})"
+  fi
+  if [[ "${optimization_level}" != "" ]]; then
+    test_name="${test_name} (${optimization_level})"
+  fi
+  normalized_stacktrace=$(egrep "0x[0-9a-f]" <<< "${output}" | sed 's/0x[0-9a-f]*//g' | sed 's/\+ [0-9]*$//g' | awk '{ print $3 }' | cut -f1 -d"(" | cut -f1 -d"<" | uniq)
+  checksum=$(shasum <<< "${normalized_stacktrace}" | head -c10)
+  is_dupe=0
+  if [[ "${normalized_stacktrace}" == "" ]]; then
+    checksum="        "
+  else
+    if egrep -q "${checksum}" <<< "${seen_checksums}"; then
+      is_dupe=1
     fi
-    normalized_stacktrace=$(egrep "0x[0-9a-f]" <<< "${output}" | sed 's/0x[0-9a-f]*//g' | sed 's/\+ [0-9]*$//g' | awk '{ print $3 }' | cut -f1 -d"(" | cut -f1 -d"<" | uniq)
-    checksum=$(shasum <<< "${normalized_stacktrace}" | head -c10)
-    is_dupe=0
-    if [[ "${normalized_stacktrace}" == "" ]]; then
-        checksum="        "
-    else
-        if egrep -q "${checksum}" <<< "${seen_checksums}"; then
-            is_dupe=1
-        fi
-        seen_checksums="${seen_checksums}:${checksum}"
+    seen_checksums="${seen_checksums}:${checksum}"
+  fi
+  if egrep -q "${crash_error_message}" <<< "${output}"; then
+    num_crashed=$((num_crashed + 1))
+    dupe_text="      "
+    if [[ ${is_dupe} == 1 ]]; then
+      dupe_text="*DUPE*"
     fi
-    if egrep -q "${crash_error_message}" <<< "${output}"; then
-      num_crashed=$((num_crashed + 1))
-      dupe_text="      "
-      if [[ ${is_dupe} == 1 ]]; then
-          dupe_text="*DUPE*"
-      fi
-      printf "  %b  %-${name_size}.${name_size}b %-6.6b (%-10.10b)\n" "${color_red}✘${color_stop}" "${test_name}" "${dupe_text}" "${checksum}"
-    else
-      printf "  %b  %-${name_size}.${name_size}b\n" "${color_green}✓${color_stop}" "${test_name}"
-    fi
+    printf "  %b  %-${name_size}.${name_size}b %-6.6b (%-10.10b)\n" "${color_red}✘${color_stop}" "${test_name}" "${dupe_text}" "${checksum}"
+  else
+    printf "  %b  %-${name_size}.${name_size}b\n" "${color_green}✓${color_stop}" "${test_name}"
   fi
 }
 
