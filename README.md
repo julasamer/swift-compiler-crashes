@@ -20,35 +20,37 @@ Using Xcode found at path: /Applications/Xcode6-Beta6.app/Contents/Developer/
 
 == Currently known crashes ==
 
-  ✘  001 protocol conforming to itself                            (b80201f50d)
+  ✘  001 protocol conforming to itself                            (654d61252d)
   ✘  002 function returning itself                                (          )
-  ✘  003 sequencetype                                             (b1045bd42c)
+  ✘  003 sequencetype                                             (eed5383bd5)
   ✘  004 function taking itself as argument                       (          )
-  ✘  005 recursive call                                           (f585534874)
-  ✘  006 placeholder property initializer with closure            (ae47cff064)
-  ✘  007 convenience init in extension                            (9a574095e0)
-  ✘  008 boolean operator                                         (734a504575)
+  ✘  005 recursive call                                           (446073f2f9)
+  ✘  006 placeholder property initializer with closure            (ede6c0e5c7)
+  ✘  007 convenience init in extension                            (6e2c39af29)
+  ✘  008 boolean operator                                         (43d38f379a)
   ✘  009 class referencing protocol referencing class             (          )
   ✘  010 circular protocol reference                              (          )
-  ✘  011 protocol class func dot type                             (eb2baee868)
-  ✘  012 fixpoint of higher order function                        (1b50b3938c)
-  ✘  013 dynamic type                                             (8e741c5012)
-  ✘  014 enum in generic type                                     (7725393f6f)
+  ✘  011 protocol class func dot type                             (dd131f4b24)
+  ✘  012 fixpoint of higher order function                        (f05d6fb24b)
+  ✘  013 dynamic type                                             (e0a705eea8)
+  ✘  014 enum in generic type                                     (0fbd19edfe)
   ✘  015 generic enum referencing itself in case                  (          )
-  ✘  016 typealias referencing itself                             (192e32273b)
-  ✘  017 type parameter resolved to protocol                      (fbb37f3936)
-  ✘  018 generic function with nested type                        (fa88d89c9e)
-  ✘  019 class hierarchy type confusion                           (43b90737f9)
-  ✘  020 class extending itself                                   (68b8df7fc6)
-  ✘  021 generic class referencing itself                         (065bafcd1b)
+  ✘  016 typealias referencing itself                             (99f7b1e534)
+  ✘  017 type parameter resolved to protocol                      (162d98be89)
+  ✘  018 generic function with nested type                        (135cbb4383)
+  ✘  019 class hierarchy type confusion                           (9ae7b64893)
+  ✘  020 class extending itself                                   (22b78d5dfc)
+  ✘  021 generic class referencing itself                         (da161d77bd)
   ✘  022 generic class referencing itself with verbose syn        (          )
-  ✘  023 calling func with default params via let or var          (60a655444a)
-  ✘  024 parameterized struct with array var initialized t        (4da3a582bb)
-  ✘  025 populating protocol typealias with generic types         (697745c3eb)
-  ✘  026 extension property referenced from another file          (94ba271262)
-  ✘  027 void map over sequence (-O)                              (a428fd6fd4)
+  ✘  023 calling func with default params via let or var          (f359a5fd4b)
+  ✘  024 parameterized struct with array var initialized t        (561c7657a3)
+  ✘  025 populating protocol typealias with generic types         (31c5d7710d)
+  ✘  026 extension property referenced from another file          (0d53bc6869)
+  ✘  027 void map over sequence (-O)                              (ce61ea1d03)
 
 == Crashes marked as fixed in previous releases ==
+
+  ✓  No tests found.
 
 ** Results: 27 of 27 tests crashed the compiler **
 

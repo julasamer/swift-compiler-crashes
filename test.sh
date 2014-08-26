@@ -54,7 +54,7 @@ do_test() {
         test_name="${test_name} (${optimization_level})"
     fi
     normalized_stacktrace=$(egrep "0x[0-9a-f]" <<< "${output}" | sed 's/0x[0-9a-f]*//g' | sed 's/\+ [0-9]*$//g' | awk '{ print $3 }' | cut -f1 -d"(" | cut -f1 -d"<" | uniq)
-    checksum=$(md5 <<< "${normalized_stacktrace}")
+    checksum=$(shasum <<< "${normalized_stacktrace}" | head -c10)
     is_dupe=0
     if [[ "${normalized_stacktrace}" == "" ]]; then
         checksum="        "
