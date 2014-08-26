@@ -1,3 +1,3 @@
-func ^(a:BooleanType, Bool) -> Bool {
+func ^(a: BooleanType, Bool) -> Bool {
     return !(a)
 }

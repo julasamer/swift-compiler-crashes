@@ -1,2 +1,2 @@
-protocol a: a {
+protocol a : a {
 }
