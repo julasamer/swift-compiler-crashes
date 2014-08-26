@@ -56,34 +56,33 @@ do_test() {
   test_name=${test_name//.script/}
   # Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
   # NOTE: Compile under the three modes -Onone, -O and -Ounchecked until we hit a crash.
-  # TODO: Clean up the mess below. Iterate through optimization levels in for loop instead.
   output=$(xcrun swiftc -Onone -o /dev/null ${files_to_compile} 2>&1)
   compilation_comment=""
   if ! egrep -q "${crash_error_message}" <<< "${output}"; then
     output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
     compilation_comment="-O"
-    if ! egrep -q "${crash_error_message}" <<< "${output}"; then
-      if [[ ${files_to_compile} =~ ".library1." ]] && [[ -f "${files_to_compile//.library1./.library2.}" ]]; then
-        source_file_using_library=${files_to_compile//.library1./.library2.}
-        compilation_comment=""
-        rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
-        output=$(xcrun -sdk macosx swiftc -emit-library -o libDummyModule.dylib -Xlinker -install_name -Xlinker @rpath/libDummyModule.dylib -emit-module -emit-module-path DummyModule.swiftmodule -module-name DummyModule -module-link-name DummyModule "${files_to_compile}" 2>&1)
-        if [[ $? == 0 ]]; then
-          crash_error_message="(${crash_error_message}|error: linker command failed with exit code 1)"
-          output=$(xcrun -sdk macosx swiftc "${source_file_using_library}" -o /dev/null -I . -L . -Xlinker -rpath -Xlinker @executable_path/ 2>&1)
-          compilation_comment="lib"
-        fi
-        rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
-      elif [[ ${files_to_compile} =~ ".script." ]]; then
-        output_1=$(xcrun swift ${files_to_compile} 2>&1)
-        err_1=$?
-        output_2=$(xcrun swift -O ${files_to_compile} 2>&1)
-        err_2=$?
-        output="${output_1}${output_2}"
-        if [[ ${err_1} != ${err_2} ]]; then
-          crash_error_message="(${crash_error_message}|Stack dump:)"
-          compilation_comment="script"
-        fi
+  fi
+  if ! egrep -q "${crash_error_message}" <<< "${output}"; then
+    if [[ ${files_to_compile} =~ ".library1." ]] && [[ -f "${files_to_compile//.library1./.library2.}" ]]; then
+      source_file_using_library=${files_to_compile//.library1./.library2.}
+      compilation_comment=""
+      rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
+      output=$(xcrun -sdk macosx swiftc -emit-library -o libDummyModule.dylib -Xlinker -install_name -Xlinker @rpath/libDummyModule.dylib -emit-module -emit-module-path DummyModule.swiftmodule -module-name DummyModule -module-link-name DummyModule "${files_to_compile}" 2>&1)
+      if [[ $? == 0 ]]; then
+        crash_error_message="(${crash_error_message}|error: linker command failed with exit code 1)"
+        output=$(xcrun -sdk macosx swiftc "${source_file_using_library}" -o /dev/null -I . -L . -Xlinker -rpath -Xlinker @executable_path/ 2>&1)
+        compilation_comment="lib"
+      fi
+      rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
+    elif [[ ${files_to_compile} =~ ".script." ]]; then
+      output_1=$(xcrun swift ${files_to_compile} 2>&1)
+      err_1=$?
+      output_2=$(xcrun swift -O ${files_to_compile} 2>&1)
+      err_2=$?
+      output="${output_1}${output_2}"
+      if [[ ${err_1} != ${err_2} ]]; then
+        crash_error_message="(${crash_error_message}|Stack dump:)"
+        compilation_comment="script"
       fi
     fi
   fi
