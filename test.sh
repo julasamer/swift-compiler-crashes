@@ -33,27 +33,37 @@ do_test() {
   files_to_compile="${path}"
   if [[ ${path} =~ part1.swift ]]; then
     files_to_compile=${path//.part1.swift/.part[1-9].swift}
-  elif [[ ${path} =~ part[2-9].swift ]]; then
+  elif [[ ${path} =~ (part|library)[2-9].swift ]]; then
     return
   fi
   num_tests=$((num_tests + 1))
   test_name=$(basename -s ".swift" "${path}")
   test_name=${test_name//-/ }
   test_name=${test_name//.part1/}
+  test_name=${test_name//.library1/}
   # Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
   # NOTE: Compile under the three modes -Onone, -O and -Ounchecked until we hit a crash.
   output=$(xcrun swiftc -Onone -o /dev/null ${files_to_compile} 2>&1)
-  optimization_level=""
+  compilation_comment=""
   if ! egrep -q "${crash_error_message}" <<< "${output}"; then
     output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
-    optimization_level="-O"
+    compilation_comment="-O"
     if ! egrep -q "${crash_error_message}" <<< "${output}"; then
       output=$(xcrun swiftc -Ounchecked -o /dev/null ${files_to_compile} 2>&1)
-      optimization_level="-Ounchecked"
+      compilation_comment="-Ounchecked"
+      if ! egrep -q "${crash_error_message}" <<< "${output}" && [[ ${files_to_compile} =~ ".library1" ]] && [[ -f "${files_to_compile//.library1/.library2}" ]]; then
+          source_file_using_library=${files_to_compile//.library1/.library2}
+          compilation_comment=""
+          rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
+          output=$(xcrun -sdk macosx swiftc -emit-library -o libDummyModule.dylib -Xlinker -install_name -Xlinker @rpath/libDummyModule.dylib -emit-module -emit-module-path DummyModule.swiftmodule -module-name DummyModule -module-link-name DummyModule "${files_to_compile}" 2>&1)
+          if [[ $? == 0 ]]; then
+              crash_error_message="(${crash_error_message}|error: linker command failed with exit code 1)"
+              output=$(xcrun -sdk macosx swiftc "${source_file_using_library}" -o /dev/null -I . -L . -Xlinker -rpath -Xlinker @executable_path/ 2>&1)
+              compilation_comment="lib"
+          fi
+          rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
+      fi
     fi
-  fi
-  if [[ "${optimization_level}" != "" ]]; then
-    test_name="${test_name} (${optimization_level})"
   fi
   normalized_stacktrace=$(egrep "0x[0-9a-f]" <<< "${output}" | sed 's/0x[0-9a-f]*//g' | sed 's/\+ [0-9]*$//g' | awk '{ print $3 }' | cut -f1 -d"(" | cut -f1 -d"<" | uniq)
   checksum=$(shasum <<< "${normalized_stacktrace}" | head -c10)
@@ -67,6 +77,9 @@ do_test() {
     seen_checksums="${seen_checksums}:${checksum}"
   fi
   if egrep -q "${crash_error_message}" <<< "${output}"; then
+    if [[ "${compilation_comment}" != "" ]]; then
+      test_name="${test_name} (${compilation_comment})"
+    fi
     num_crashed=$((num_crashed + 1))
     dupe_text="      "
     if [[ ${is_dupe} == 1 ]]; then
