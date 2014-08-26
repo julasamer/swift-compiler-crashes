@@ -35,11 +35,17 @@ do_test() {
     # Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
     # NOTE: Compile under the three modes -Onone, -O and -Ounchecked until we hit a crash.
     output=$(xcrun swiftc -Onone -o /dev/null ${files_to_compile} 2>&1)
+    optimization_level=""
     if ! egrep -q "${crash_error_message}" <<< "${output}"; then
         output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
+        optimization_level="-O"
         if ! egrep -q "${crash_error_message}" <<< "${output}"; then
             output=$(xcrun swiftc -Ounchecked -o /dev/null ${files_to_compile} 2>&1)
+            optimization_level="-Ounchecked"
         fi
+    fi
+    if [[ "${optimization_level}" != "" ]]; then
+        test_name="${test_name} (${optimization_level})"
     fi
     normalized_stacktrace=$(egrep "0x[0-9a-f]" <<< "${output}" | sed 's/0x[0-9a-f]*//g' | sed 's/\+ [0-9]*$//g' | awk '{ print $3 }' | cut -f1 -d"(" | cut -f1 -d"<" | uniq)
     checksum=$(md5 <<< "${normalized_stacktrace}")
