@@ -32,7 +32,7 @@ color_normal_display="\e[0m"
 
 argument_files=$*
 name_size=$((columns-27))
-crash_error_message="error: unable to execute command: Segmentation fault:"
+crash_error_message="error: unable to execute command: Segmentation fault:|LLVM ERROR:"
 num_tests=0
 num_crashed=0
 seen_checksums=""
@@ -69,7 +69,7 @@ test_file() {
       rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
       output=$(xcrun -sdk macosx swiftc -emit-library -o libDummyModule.dylib -Xlinker -install_name -Xlinker @rpath/libDummyModule.dylib -emit-module -emit-module-path DummyModule.swiftmodule -module-name DummyModule -module-link-name DummyModule "${files_to_compile}" 2>&1)
       if [[ $? == 0 ]]; then
-        crash_error_message="(${crash_error_message}|error: linker command failed with exit code 1)"
+        crash_error_message="${crash_error_message}|error: linker command failed with exit code 1"
         output=$(xcrun -sdk macosx swiftc "${source_file_using_library}" -o /dev/null -I . -L . -Xlinker -rpath -Xlinker @executable_path/ 2>&1)
         compilation_comment="lib"
       fi
@@ -81,7 +81,7 @@ test_file() {
       err_2=$?
       output="${output_1}${output_2}"
       if [[ ${err_1} != ${err_2} ]]; then
-        crash_error_message="(${crash_error_message}|Stack dump:)"
+        crash_error_message="${crash_error_message}|Stack dump:"
         compilation_comment="script"
       fi
     fi
