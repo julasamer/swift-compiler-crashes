@@ -17,6 +17,7 @@ $ ./test.sh
 
 Running tests against: swift-600.0.47.8
 Using Xcode found at path: /Applications/Xcode6-Beta6.app/Contents/Developer/
+Usage: ./test.sh [-v] [-c<columns>] [file ...]
 
 == Currently known crashes ==
 
@@ -49,12 +50,13 @@ Using Xcode found at path: /Applications/Xcode6-Beta6.app/Contents/Developer/
   ✘  027 void map over sequence (-O)                              (ce61ea1d03)
   ✘  028 extension property defined in library (lib)              (          )
   ✘  029 class with anyobject type constraint                     (adce75c94e)
+  ✘  030 string as extensibe collection (script)                  (8a3d2facf1)
 
 == Crashes marked as fixed in previous releases ==
 
   ✓  No tests found.
 
-** Results: 29 of 29 tests crashed the compiler **
+** Results: 30 of 30 tests crashed the compiler **
 
 ```
 
@@ -64,9 +66,9 @@ Contributor hall of fame
 | GitHub contributor | Twitter | Cases contributed | Started contributing |
 | :---------- | :------ | ----------------: | -------------------: |
 | <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 23 test cases | Xcode6-Beta6 |
+| <a href="https://github.com/tmu">tmu</a> – Teemu Kurppa | <a href="https://twitter.com/Teemu">@Teemu</a> | 2 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/0xc010d">0xc010d</a> – Ievgen Solodovnykov | <a href="https://twitter.com/0xc010d">@0xc010d</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/AlexDenisov">AlexDenisov</a> – Alexey Denisov | <a href="https://twitter.com/1101_debian">@1101_debian</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/jvasileff">jvasileff</a> – John Vasileff | <a href="https://twitter.com/jvasileff">@jvasileff</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/owensd">owensd</a> – David Owens II | <a href="https://twitter.com/owensd">@owensd</a> | 1 test case | Xcode6-Beta6 |
-| <a href="https://github.com/tmu">tmu</a> – Teemu Kurppa | <a href="https://twitter.com/Teemu">@Teemu</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/jansabbe">jansabbe</a> – Jan Sabbe | <a href="https://twitter.com/jansabbe">@jansabbe</a> | 1 test case | Xcode6-Beta6 |
