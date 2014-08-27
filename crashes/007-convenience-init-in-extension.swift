@@ -1,3 +1,5 @@
+// Test case submitted to project by https://github.com/0xc010d (Ievgen Solodovnykov)
+
 class A {
     init() {
     }

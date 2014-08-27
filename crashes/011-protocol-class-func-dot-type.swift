@@ -1,3 +1,5 @@
+// Test case submitted to project by https://github.com/practicalswift (practicalswift)
+
 protocol b {
     class func e()
 }

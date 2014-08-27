@@ -1,3 +1,4 @@
+// Test case submitted to project by https://github.com/tmu (Teemu Kurppa)
 // rdar://18118173
 
 class a<T : Hashable> {
