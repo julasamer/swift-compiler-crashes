@@ -1,3 +1,4 @@
+// Test case submitted to project by https://github.com/practicalswift (practicalswift)
 // rdar://17242441
 
 class a<f : b, g : b where f.d == g> {

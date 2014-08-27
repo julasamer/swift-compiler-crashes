@@ -1,3 +1,4 @@
+// Test case submitted to project by https://github.com/practicalswift (practicalswift)
 // rdar://17240737
 
 protocol a {
