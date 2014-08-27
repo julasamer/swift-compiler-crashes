@@ -1,0 +1,24 @@
+// rdar://17240590
+
+protocol a {
+}
+
+protocol b : a {
+}
+
+protocol c : a {
+}
+
+protocol d {
+    typealias e = a
+}
+
+struct e : d {
+    typealias e = b
+}
+
+func g<H : d where H.e == b> (n: H) {
+}
+
+func g<I : d where I.e == c> (n: I) {
+}
