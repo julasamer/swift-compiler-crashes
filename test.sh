@@ -23,7 +23,7 @@ while getopts ":c:v" o; do
   esac
 done
 
-shift $(expr $OPTIND - 1)
+shift $((OPTIND - 1))
 
 color_red="\e[31m"
 color_green="\e[32m"
@@ -31,7 +31,7 @@ color_bold="\e[1m"
 color_normal_display="\e[0m"
 
 argument_files=$*
-name_size=$((columns-27))
+name_size=$((columns - 27))
 crash_error_message="error: unable to execute command: Segmentation fault:|LLVM ERROR:"
 num_tests=0
 num_crashed=0
@@ -63,7 +63,7 @@ test_file() {
     compilation_comment="-O"
   fi
   if ! egrep -q "${crash_error_message}" <<< "${output}"; then
-    if [[ ${files_to_compile} =~ ".library1." ]] && [[ -f "${files_to_compile//.library1./.library2.}" ]]; then
+    if [[ ${files_to_compile} =~ \.library1\. ]] && [[ -f "${files_to_compile//.library1./.library2.}" ]]; then
       source_file_using_library=${files_to_compile//.library1./.library2.}
       compilation_comment=""
       rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
@@ -74,7 +74,7 @@ test_file() {
         compilation_comment="lib"
       fi
       rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
-    elif [[ ${files_to_compile} =~ ".script." ]]; then
+    elif [[ ${files_to_compile} =~ \.script\. ]]; then
       output_1=$(xcrun swift ${files_to_compile} 2>&1)
       err_1=$?
       output_2=$(xcrun swift -O ${files_to_compile} 2>&1)
@@ -121,7 +121,7 @@ test_file() {
 run_tests_in_directory() {
   header="$1"
   path="$2"
-  printf "== ${color_bold}${header}${color_normal_display} ==\n"
+  printf "%b" "== ${color_bold}${header}${color_normal_display} ==\n"
   echo
   found_tests=0
   for test_path in "${path}"/*.swift; do
