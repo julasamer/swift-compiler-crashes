@@ -37,7 +37,7 @@ num_tests=0
 num_crashed=0
 seen_checksums=""
 
-do_test() {
+test_file() {
   path="$1"
   if [[ ! -f "${path}" ]]; then
     return
@@ -118,7 +118,7 @@ do_test() {
   fi
 }
 
-run_tests() {
+run_tests_in_directory() {
   header="$1"
   path="$2"
   printf "== ${color_bold}${header}${color_normal_display} ==\n"
@@ -127,7 +127,7 @@ run_tests() {
   for test_path in "${path}"/*.swift; do
     if [[ -f "${test_path}" ]]; then
       found_tests=1
-      do_test "${test_path}"
+      test_file "${test_path}"
     fi
   done
   if [[ ${found_tests} == 0 ]]; then
@@ -136,18 +136,21 @@ run_tests() {
   echo
 }
 
-if [[ "${argument_files}" == "" ]]; then
-  run_tests "Currently known crashes" "./crashes"
-  run_tests "Crashes marked as fixed in previous releases" "./fixed"
-else
-  for test_path in ${argument_files}; do
-    if [[ -f "${test_path}" ]]; then
-      found_tests=1
-      do_test "${test_path}"
-    fi
-  done
+main() {
+  if [[ "${argument_files}" == "" ]]; then
+    run_tests_in_directory "Currently known crashes" "./crashes"
+    run_tests_in_directory "Crashes marked as fixed in previous releases" "./fixed"
+  else
+    for test_path in ${argument_files}; do
+      if [[ -f "${test_path}" ]]; then
+        found_tests=1
+        test_file "${test_path}"
+      fi
+    done
+    echo
+  fi
+  echo "** Results: ${num_crashed} of ${num_tests} tests crashed the compiler **"
   echo
-fi
+}
 
-echo "** Results: ${num_crashed} of ${num_tests} tests crashed the compiler **"
-echo
+main
