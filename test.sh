@@ -79,10 +79,10 @@ test_file() {
       err_1=$?
       output_2=$(xcrun swift -O ${files_to_compile} 2>&1)
       err_2=$?
-      output="${output_1}${output_2}"
       if [[ ${err_1} != ${err_2} ]]; then
         crash_error_message="${crash_error_message}|Stack dump:"
         compilation_comment="script"
+        output="${output_1}${output_2}"
       fi
     fi
   fi
