@@ -57,12 +57,12 @@ test_file() {
   # NOTE: Compile under the three modes -Onone, -O and -Ounchecked until we hit a crash.
   output=$(xcrun swiftc -Onone -o /dev/null ${files_to_compile} 2>&1)
   compilation_comment=""
-  crash_error_message="error: unable to execute command: Segmentation fault:|LLVM ERROR:|While emitting IR for source file"
-  if ! egrep -q "${crash_error_message}" <<< "${output}"; then
+  crash_detection_regexp="error: unable to execute command: Segmentation fault:|LLVM ERROR:|While emitting IR for source file"
+  if ! egrep -q "${crash_detection_regexp}" <<< "${output}"; then
     output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
     compilation_comment="-O"
   fi
-  if ! egrep -q "${crash_error_message}" <<< "${output}"; then
+  if ! egrep -q "${crash_detection_regexp}" <<< "${output}"; then
     if [[ ${files_to_compile} =~ \.library1\. ]] && [[ -f "${files_to_compile//.library1./.library2.}" ]]; then
       source_file_using_library=${files_to_compile//.library1./.library2.}
       compilation_comment=""
@@ -70,8 +70,8 @@ test_file() {
       output=$(xcrun -sdk macosx swiftc -emit-library -o libDummyModule.dylib -Xlinker -install_name -Xlinker @rpath/libDummyModule.dylib -emit-module -emit-module-path DummyModule.swiftmodule -module-name DummyModule -module-link-name DummyModule "${files_to_compile}" 2>&1)
       if [[ $? == 0 ]]; then
         output=$(xcrun -sdk macosx swiftc "${source_file_using_library}" -o /dev/null -I . -L . -Xlinker -rpath -Xlinker @executable_path/ 2>&1)
-        if ! egrep -q "${crash_error_message}" <<< "${output}" && ! egrep -q "implicit entry/start for main executable" <<< "${output}"; then
-            crash_error_message="${crash_error_message}|error: linker command failed with exit code 1"
+        if ! egrep -q "${crash_detection_regexp}" <<< "${output}" && ! egrep -q "implicit entry/start for main executable" <<< "${output}"; then
+            crash_detection_regexp="${crash_detection_regexp}|error: linker command failed with exit code 1"
         fi
         compilation_comment="lib"
       fi
@@ -82,7 +82,7 @@ test_file() {
       output_2=$(xcrun swift -O ${files_to_compile} 2>&1)
       err_2=$?
       if [[ ${err_1} != ${err_2} ]]; then
-        crash_error_message="${crash_error_message}|Stack dump:"
+        crash_detection_regexp="${crash_detection_regexp}|Stack dump:"
         compilation_comment="script"
         output="${output_1}${output_2}"
       fi
@@ -99,7 +99,7 @@ test_file() {
     fi
     seen_checksums="${seen_checksums}:${checksum}"
   fi
-  if egrep -q "${crash_error_message}" <<< "${output}"; then
+  if egrep -q "${crash_detection_regexp}" <<< "${output}"; then
     if [[ "${compilation_comment}" != "" ]]; then
       test_name="${test_name} (${compilation_comment})"
     fi
@@ -114,8 +114,11 @@ test_file() {
   fi
   if [[ ${verbose} == 1 ]]; then
     echo
-    echo "Compilation output:"
+    printf "%b" "${color_bold}Compilation output:${color_normal_display}\n"
     echo "${output}"
+    echo
+    printf "%b" "${color_bold}Crash detection regexp used:${color_normal_display}\n"
+    echo "${crash_detection_regexp}"
     echo
   fi
 }
