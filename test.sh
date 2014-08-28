@@ -32,7 +32,6 @@ color_normal_display="\e[0m"
 
 argument_files=$*
 name_size=$((columns - 27))
-crash_error_message="error: unable to execute command: Segmentation fault:|LLVM ERROR:"
 num_tests=0
 num_crashed=0
 seen_checksums=""
@@ -58,6 +57,7 @@ test_file() {
   # NOTE: Compile under the three modes -Onone, -O and -Ounchecked until we hit a crash.
   output=$(xcrun swiftc -Onone -o /dev/null ${files_to_compile} 2>&1)
   compilation_comment=""
+  crash_error_message="error: unable to execute command: Segmentation fault:|LLVM ERROR:|While emitting IR for source file"
   if ! egrep -q "${crash_error_message}" <<< "${output}"; then
     output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
     compilation_comment="-O"
@@ -69,8 +69,10 @@ test_file() {
       rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
       output=$(xcrun -sdk macosx swiftc -emit-library -o libDummyModule.dylib -Xlinker -install_name -Xlinker @rpath/libDummyModule.dylib -emit-module -emit-module-path DummyModule.swiftmodule -module-name DummyModule -module-link-name DummyModule "${files_to_compile}" 2>&1)
       if [[ $? == 0 ]]; then
-        crash_error_message="${crash_error_message}|error: linker command failed with exit code 1"
         output=$(xcrun -sdk macosx swiftc "${source_file_using_library}" -o /dev/null -I . -L . -Xlinker -rpath -Xlinker @executable_path/ 2>&1)
+        if ! egrep -q "${crash_error_message}" <<< "${output}" && ! egrep -q "implicit entry/start for main executable" <<< "${output}"; then
+            crash_error_message="${crash_error_message}|error: linker command failed with exit code 1"
+        fi
         compilation_comment="lib"
       fi
       rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
