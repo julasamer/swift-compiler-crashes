@@ -57,12 +57,13 @@ Usage: ./test.sh [-v] [-c<columns>] [file ...]
   ✘  034 typecheck segfault                                       (612babfff4)
   ✘  035 multiple typecheck segfault                              (5db9b52cef)
   ✘  036 lisp style                                               (bfa18d7b9c)
+  ✘  037 exit code depends on optimization level (script)         (97f491bfbd)
 
 == Crashes marked as fixed in previous releases ==
 
   ✓  No tests found.
 
-** Results: 30 of 30 tests crashed the compiler **
+** Results: 37 of 37 tests crashed the compiler **
 
 ```
 
@@ -70,8 +71,8 @@ Contributor hall of fame
 ========================
 
 | GitHub contributor | Twitter | Cases contributed | Started contributing |
-| :---------- | :------ | ----------------: | -------------------: |
-| <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 30 test cases | Xcode6-Beta6 |
+| :----------------- | :------ | ----------------: | -------------------: |
+| <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 31 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/tmu">tmu</a> – Teemu Kurppa | <a href="https://twitter.com/Teemu">@Teemu</a> | 2 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/0xc010d">0xc010d</a> – Ievgen Solodovnykov | <a href="https://twitter.com/0xc010d">@0xc010d</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/AlexDenisov">AlexDenisov</a> – Alexey Denisov | <a href="https://twitter.com/1101_debian">@1101_debian</a> | 1 test case | Xcode6-Beta6 |
