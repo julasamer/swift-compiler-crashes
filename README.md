@@ -51,6 +51,12 @@ Usage: ./test.sh [-v] [-c<columns>] [file ...]
   ✘  028 extension property defined in library (lib)              (          )
   ✘  029 class with anyobject type constraint                     (adce75c94e)
   ✘  030 string as extensibe collection (script)                  (8a3d2facf1)
+  ✘  031 basic block terminator                                   (          )
+  ✘  032 type constraint emit type metadata                       (7498fa7f98)
+  ✘  033 constraint ordering heap trash                           (446456229f)
+  ✘  034 typecheck segfault                                       (612babfff4)
+  ✘  035 multiple typecheck segfault                              (5db9b52cef)
+  ✘  036 lisp style                                               (bfa18d7b9c)
 
 == Crashes marked as fixed in previous releases ==
 
@@ -65,7 +71,7 @@ Contributor hall of fame
 
 | GitHub contributor | Twitter | Cases contributed | Started contributing |
 | :---------- | :------ | ----------------: | -------------------: |
-| <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 23 test cases | Xcode6-Beta6 |
+| <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 29 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/tmu">tmu</a> – Teemu Kurppa | <a href="https://twitter.com/Teemu">@Teemu</a> | 2 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/0xc010d">0xc010d</a> – Ievgen Solodovnykov | <a href="https://twitter.com/0xc010d">@0xc010d</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/AlexDenisov">AlexDenisov</a> – Alexey Denisov | <a href="https://twitter.com/1101_debian">@1101_debian</a> | 1 test case | Xcode6-Beta6 |
