@@ -2,9 +2,9 @@
 // rdar://18175202
 
 func some<S: SequenceType, T where Optional<T> == S.Generator.Element>(xs : S) -> T? {
-     for (mx : T?) in xs {
-         if let x = mx {
-             return x
+    for (mx : T?) in xs {
+        if let x = mx {
+            return x
         }
     }
     return nil
