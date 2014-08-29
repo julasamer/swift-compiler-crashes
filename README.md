@@ -61,12 +61,13 @@ Usage: ./test.sh [-v] [-c<columns>] [file ...]
   ✘  038 hang on init of recursive generic type (timeout)         (          )
   ✘  039 string join (script)                              *DUPE* (97f491bfbd)
   ✘  040 optional in generics                                     (96778af20a)
+  ✘  041 combo of generic struct func and protocol                (372cb36d5e)
 
 == Crashes marked as fixed in previous releases ==
 
   ✓  No tests found.
 
-** Results: 40 of 40 tests crashed the compiler **
+** Results: 41 of 41 tests crashed the compiler **
 
 ```
 
@@ -75,7 +76,7 @@ Contributor hall of fame
 
 | GitHub contributor | Twitter | Cases contributed | Started contributing |
 | :----------------- | :------ | ----------------: | -------------------: |
-| <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 31 test cases | Xcode6-Beta6 |
+| <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 32 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/tmu">tmu</a> – Teemu Kurppa | <a href="https://twitter.com/Teemu">@Teemu</a> | 4 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/0xc010d">0xc010d</a> – Ievgen Solodovnykov | <a href="https://twitter.com/0xc010d">@0xc010d</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/AlexDenisov">AlexDenisov</a> – Alexey Denisov | <a href="https://twitter.com/1101_debian">@1101_debian</a> | 1 test case | Xcode6-Beta6 |
