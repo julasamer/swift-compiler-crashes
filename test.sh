@@ -36,7 +36,7 @@ num_tests=0
 num_crashed=0
 seen_checksums=""
 
-timeout() {
+execute_with_timeout() {
   timeout_in_seconds=$1
   command="/bin/sh -c \"$2\""
   expect -c "set echo \"-noecho\"; set timeout $timeout_in_seconds; spawn -noecho $command; expect timeout { exit 1 } eof { exit 0 } > /dev/null 2> /dev/null"
@@ -45,7 +45,7 @@ timeout() {
 
 test_file() {
   path="$1"
-  if [[ ! -f "${path}" ]]; then
+  if [[ ! -f ${path} ]]; then
     return
   fi
   files_to_compile="${path}"
@@ -92,7 +92,7 @@ test_file() {
     rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
   fi
   if [[ ${swift_crash} == 0 ]] && [[ ${files_to_compile} =~ \.timeout\. ]]; then
-    timeout 5 "xcrun swift ${files_to_compile}"
+    execute_with_timeout 5 "xcrun swift ${files_to_compile}"
     if [[ $? == 1 ]]; then
       swift_crash=1
       compilation_comment="timeout"
@@ -115,13 +115,13 @@ test_file() {
   if [[ "${normalized_stacktrace}" == "" ]]; then
     checksum="        "
   else
-    if egrep -q "${checksum}" <<< "${seen_checksums}"; then
+    if [[ ${seen_checksums} =~ ${checksum} ]]; then
       is_dupe=1
     fi
     seen_checksums="${seen_checksums}:${checksum}"
   fi
   if [[ ${swift_crash} == 1 ]]; then
-    if [[ "${compilation_comment}" != "" ]]; then
+    if [[ ${compilation_comment} != "" ]]; then
       test_name="${test_name} (${compilation_comment})"
     fi
     num_crashed=$((num_crashed + 1))
@@ -148,7 +148,7 @@ run_tests_in_directory() {
   echo
   found_tests=0
   for test_path in "${path}"/*.swift; do
-    if [[ -f "${test_path}" ]]; then
+    if [[ -f ${test_path} ]]; then
       found_tests=1
       test_file "${test_path}"
     fi
@@ -160,12 +160,12 @@ run_tests_in_directory() {
 }
 
 main() {
-  if [[ "${argument_files}" == "" ]]; then
+  if [[ ${argument_files} == "" ]]; then
     run_tests_in_directory "Currently known crashes" "./crashes"
     run_tests_in_directory "Crashes marked as fixed in previous releases" "./fixed"
   else
     for test_path in ${argument_files}; do
-      if [[ -f "${test_path}" ]]; then
+      if [[ -f ${test_path} ]]; then
         found_tests=1
         test_file "${test_path}"
       fi
