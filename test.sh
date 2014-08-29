@@ -36,6 +36,13 @@ num_tests=0
 num_crashed=0
 seen_checksums=""
 
+timeout() {
+  timeout_in_seconds=$1
+  command="/bin/sh -c \"$2\""
+  expect -c "set echo \"-noecho\"; set timeout $timeout_in_seconds; spawn -noecho $command; expect timeout { exit 1 } eof { exit 0 } > /dev/null 2> /dev/null"
+  return $?
+}
+
 test_file() {
   path="$1"
   if [[ ! -f "${path}" ]]; then
@@ -53,8 +60,10 @@ test_file() {
   test_name=${test_name//.part1/}
   test_name=${test_name//.library1/}
   test_name=${test_name//.script/}
+  test_name=${test_name//.timeout/}
   # Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
   # NOTE: Compile under the three modes -Onone, -O and -Ounchecked until we hit a crash.
+  swift_crash=0
   output=$(xcrun swiftc -Onone -o /dev/null ${files_to_compile} 2>&1)
   compilation_comment=""
   crash_detection_regexp="error: unable to execute command: Segmentation fault:|LLVM ERROR:|While emitting IR for source file"
@@ -76,6 +85,12 @@ test_file() {
         compilation_comment="lib"
       fi
       rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
+    elif [[ ${files_to_compile} =~ \.timeout\. ]]; then
+      timeout 5 "xcrun swift ${files_to_compile}"
+      if [[ $? == 1 ]]; then
+          swift_crash=1
+          compilation_comment="timeout"
+      fi
     elif [[ ${files_to_compile} =~ \.script\. ]]; then
       output_1=$(xcrun swift ${files_to_compile} 2>&1)
       err_1=$?
@@ -99,7 +114,7 @@ test_file() {
     fi
     seen_checksums="${seen_checksums}:${checksum}"
   fi
-  if egrep -q "${crash_detection_regexp}" <<< "${output}"; then
+  if egrep -q "${crash_detection_regexp}" <<< "${output}" || [[ ${swift_crash} == 1 ]]; then
     if [[ "${compilation_comment}" != "" ]]; then
       test_name="${test_name} (${compilation_comment})"
     fi
