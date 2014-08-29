@@ -1,22 +1,22 @@
 // Test case submitted to project by https://github.com/practicalswift (practicalswift)
 // rdar://18176436
 
-protocol FirstProtocol {
-    typealias FirstType
+protocol A {
+    typealias E
 }
 
-struct FirstStruct<T : FirstProtocol> {
-    let foo: T
-    let bar: T.FirstType
+struct B<T : A> {
+    let h: T
+    let i: T.E
 }
 
-protocol SecondProtocol {
-    typealias SecondType
-    func baz<T where T.FirstType == SecondType>(f: FirstStruct<T>)
+protocol C {
+    typealias F
+    func g<T where T.E == F>(f: B<T>)
 }
 
-struct SecondStruct: SecondProtocol {
-    typealias SecondType = Int
-    func baz<T where T.FirstType == SecondType>(f: FirstStruct<T>) {
+struct D : C {
+    typealias F = Int
+    func g<T where T.E == F>(f: B<T>) {
     }
 }
