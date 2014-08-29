@@ -62,45 +62,53 @@ test_file() {
   test_name=${test_name//.script/}
   test_name=${test_name//.timeout/}
   # Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
-  # NOTE: Compile under the three modes -Onone, -O and -Ounchecked until we hit a crash.
   swift_crash=0
   output=$(xcrun swiftc -Onone -o /dev/null ${files_to_compile} 2>&1)
+  if egrep -q "error: unable to execute command: Segmentation fault:|LLVM ERROR:|While emitting IR for source file" <<< "${output}"; then
+    swift_crash=1
+  fi
   compilation_comment=""
-  crash_detection_regexp="error: unable to execute command: Segmentation fault:|LLVM ERROR:|While emitting IR for source file"
-  if ! egrep -q "${crash_detection_regexp}" <<< "${output}"; then
+  if [[ ${swift_crash} == 0 ]]; then
     output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
     compilation_comment="-O"
+    if egrep -q "error: unable to execute command: Segmentation fault:|LLVM ERROR:|While emitting IR for source file" <<< "${output}"; then
+      swift_crash=1
+    fi
   fi
-  if ! egrep -q "${crash_detection_regexp}" <<< "${output}"; then
-    if [[ ${files_to_compile} =~ \.library1\. ]] && [[ -f "${files_to_compile//.library1./.library2.}" ]]; then
-      source_file_using_library=${files_to_compile//.library1./.library2.}
-      compilation_comment=""
-      rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
-      output=$(xcrun -sdk macosx swiftc -emit-library -o libDummyModule.dylib -Xlinker -install_name -Xlinker @rpath/libDummyModule.dylib -emit-module -emit-module-path DummyModule.swiftmodule -module-name DummyModule -module-link-name DummyModule "${files_to_compile}" 2>&1)
-      if [[ $? == 0 ]]; then
-        output=$(xcrun -sdk macosx swiftc "${source_file_using_library}" -o /dev/null -I . -L . -Xlinker -rpath -Xlinker @executable_path/ 2>&1)
-        if ! egrep -q "${crash_detection_regexp}" <<< "${output}" && ! egrep -q "implicit entry/start for main executable" <<< "${output}"; then
-            crash_detection_regexp="${crash_detection_regexp}|error: linker command failed with exit code 1"
-        fi
-        compilation_comment="lib"
-      fi
-      rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
-    elif [[ ${files_to_compile} =~ \.timeout\. ]]; then
-      timeout 5 "xcrun swift ${files_to_compile}"
-      if [[ $? == 1 ]]; then
+  if [[ ${swift_crash} == 0 ]] && [[ ${files_to_compile} =~ \.library1\. ]] && [[ -f "${files_to_compile//.library1./.library2.}" ]]; then
+    source_file_using_library=${files_to_compile//.library1./.library2.}
+    compilation_comment=""
+    rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
+    output=$(xcrun -sdk macosx swiftc -emit-library -o libDummyModule.dylib -Xlinker -install_name -Xlinker @rpath/libDummyModule.dylib -emit-module -emit-module-path DummyModule.swiftmodule -module-name DummyModule -module-link-name DummyModule "${files_to_compile}" 2>&1)
+    if [[ $? == 0 ]]; then
+      output=$(xcrun -sdk macosx swiftc "${source_file_using_library}" -o /dev/null -I . -L . -Xlinker -rpath -Xlinker @executable_path/ 2>&1)
+      if egrep -q "error: unable to execute command: Segmentation fault:|LLVM ERROR:|While emitting IR for source file" <<< "${output}"; then
+        swift_crash=1
+      elif ! egrep -q "implicit entry/start for main executable" <<< "${output}"; then
+        if egrep -q "error: linker command failed with exit code 1" <<< "${output}"; then
           swift_crash=1
-          compilation_comment="timeout"
+        fi
       fi
-    elif [[ ${files_to_compile} =~ \.script\. ]]; then
-      output_1=$(xcrun swift ${files_to_compile} 2>&1)
-      err_1=$?
-      output_2=$(xcrun swift -O ${files_to_compile} 2>&1)
-      err_2=$?
-      if [[ ${err_1} != ${err_2} ]]; then
-        crash_detection_regexp="${crash_detection_regexp}|Stack dump:"
-        compilation_comment="script"
-        output="${output_1}${output_2}"
-      fi
+      compilation_comment="lib"
+    fi
+    rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
+  fi
+  if [[ ${swift_crash} == 0 ]] && [[ ${files_to_compile} =~ \.timeout\. ]]; then
+    timeout 5 "xcrun swift ${files_to_compile}"
+    if [[ $? == 1 ]]; then
+      swift_crash=1
+      compilation_comment="timeout"
+    fi
+  fi
+  if [[ ${swift_crash} == 0 ]] && [[ ${files_to_compile} =~ \.script\. ]]; then
+    output_1=$(xcrun swift ${files_to_compile} 2>&1)
+    err_1=$?
+    output_2=$(xcrun swift -O ${files_to_compile} 2>&1)
+    err_2=$?
+    if [[ ${err_1} != ${err_2} ]]; then
+      swift_crash=1
+      compilation_comment="script"
+      output="${output_1}${output_2}"
     fi
   fi
   normalized_stacktrace=$(egrep "0x[0-9a-f]" <<< "${output}" | sed 's/0x[0-9a-f]*//g' | sed 's/\+ [0-9]*$//g' | awk '{ print $3 }' | cut -f1 -d"(" | cut -f1 -d"<" | uniq)
@@ -114,7 +122,7 @@ test_file() {
     fi
     seen_checksums="${seen_checksums}:${checksum}"
   fi
-  if egrep -q "${crash_detection_regexp}" <<< "${output}" || [[ ${swift_crash} == 1 ]]; then
+  if [[ ${swift_crash} == 1 ]]; then
     if [[ "${compilation_comment}" != "" ]]; then
       test_name="${test_name} (${compilation_comment})"
     fi
@@ -131,9 +139,6 @@ test_file() {
     echo
     printf "%b" "${color_bold}Compilation output:${color_normal_display}\n"
     echo "${output}"
-    echo
-    printf "%b" "${color_bold}Crash detection regexp used:${color_normal_display}\n"
-    echo "${crash_detection_regexp}"
     echo
   fi
 }
