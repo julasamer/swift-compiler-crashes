@@ -64,14 +64,14 @@ test_file() {
   # Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
   swift_crash=0
   output=$(xcrun swiftc -Onone -o /dev/null ${files_to_compile} 2>&1)
-  if egrep -q "error: unable to execute command: Segmentation fault:|LLVM ERROR:|While emitting IR for source file" <<< "${output}"; then
+  if [[ ${output} =~ (error:\ unable\ to\ execute\ command:\ Segmentation\ fault:|LLVM\ ERROR:|While\ emitting\ IR\ for\ source\ file) ]]; then
     swift_crash=1
   fi
   compilation_comment=""
   if [[ ${swift_crash} == 0 ]]; then
     output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
     compilation_comment="-O"
-    if egrep -q "error: unable to execute command: Segmentation fault:|LLVM ERROR:|While emitting IR for source file" <<< "${output}"; then
+    if [[ ${output} =~ (error:\ unable\ to\ execute\ command:\ Segmentation fault:|LLVM\ ERROR:|While\ emitting\ IR\ for\ source\ file) ]]; then
       swift_crash=1
     fi
   fi
@@ -82,12 +82,10 @@ test_file() {
     output=$(xcrun -sdk macosx swiftc -emit-library -o libDummyModule.dylib -Xlinker -install_name -Xlinker @rpath/libDummyModule.dylib -emit-module -emit-module-path DummyModule.swiftmodule -module-name DummyModule -module-link-name DummyModule "${files_to_compile}" 2>&1)
     if [[ $? == 0 ]]; then
       output=$(xcrun -sdk macosx swiftc "${source_file_using_library}" -o /dev/null -I . -L . -Xlinker -rpath -Xlinker @executable_path/ 2>&1)
-      if egrep -q "error: unable to execute command: Segmentation fault:|LLVM ERROR:|While emitting IR for source file" <<< "${output}"; then
+      if [[ ${output} =~ (error:\ unable\ to\ execute\ command:\ Segmentation fault:|LLVM\ ERROR:|While\ emitting\ IR\ for\ source\ file) ]]; then
         swift_crash=1
-      elif ! egrep -q "implicit entry/start for main executable" <<< "${output}"; then
-        if egrep -q "error: linker command failed with exit code 1" <<< "${output}"; then
-          swift_crash=1
-        fi
+      elif [[ ! ${output} =~ implicit\ entry/start\ for\ main\ executable ]] && [[ ${output} =~ error:\ linker\ command\ failed\ with\ exit\ code\ 1 ]]; then
+        swift_crash=1
       fi
       compilation_comment="lib"
     fi
