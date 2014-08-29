@@ -58,12 +58,13 @@ Usage: ./test.sh [-v] [-c<columns>] [file ...]
   ✘  035 multiple typecheck segfault                              (5db9b52cef)
   ✘  036 lisp style                                               (bfa18d7b9c)
   ✘  037 exit code depends on optimization level (script)         (97f491bfbd)
+  ✘  038 hang on init of recursive generic type (timeout)         (          )
 
 == Crashes marked as fixed in previous releases ==
 
   ✓  No tests found.
 
-** Results: 37 of 37 tests crashed the compiler **
+** Results: 38 of 38 tests crashed the compiler **
 
 ```
 
