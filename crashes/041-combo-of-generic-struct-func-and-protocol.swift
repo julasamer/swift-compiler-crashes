@@ -1,5 +1,5 @@
 // Test case submitted to project by https://github.com/practicalswift (practicalswift)
-// rdar://18176436
+// http://www.openradar.me/18176436
 
 protocol A {
     typealias E
