@@ -33,6 +33,9 @@ color_normal_display="\e[0m"
 
 argument_files=$*
 name_size=$((columns - 19))
+if [[ ${name_size} -lt 35 ]]; then
+  name_size=35
+fi
 num_tests=0
 num_crashed=0
 seen_checksums=""
