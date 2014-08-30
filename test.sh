@@ -13,7 +13,7 @@ echo
 columns=$(tput cols)
 verbose=0
 while getopts ":c:v" o; do
-  case "${o}" in
+  case ${o} in
     c)
       columns=${OPTARG}
       ;;
@@ -38,17 +38,17 @@ seen_checksums=""
 
 execute_with_timeout() {
   timeout_in_seconds=$1
-  command="/bin/sh -c \"$2\""
-  expect -c "set echo \"-noecho\"; set timeout $timeout_in_seconds; spawn -noecho $command; expect timeout { exit 1 } eof { exit 0 } > /dev/null 2> /dev/null"
+  command=$2
+  expect -c "set echo \"-noecho\"; set timeout $timeout_in_seconds; spawn -noecho /bin/sh -c \"${command}\"; expect timeout { exit 1 } eof { exit 0 } > /dev/null 2> /dev/null"
   return $?
 }
 
 test_file() {
-  path="$1"
+  path=$1
   if [[ ! -f ${path} ]]; then
     return
   fi
-  files_to_compile="${path}"
+  files_to_compile=${path}
   if [[ ${path} =~ part1.swift ]]; then
     files_to_compile=${path//.part1.swift/.part[1-9].swift}
   elif [[ ${path} =~ (part|library)[2-9].swift ]]; then
@@ -75,7 +75,7 @@ test_file() {
       swift_crash=1
     fi
   fi
-  if [[ ${swift_crash} == 0 ]] && [[ ${files_to_compile} =~ \.library1\. ]] && [[ -f "${files_to_compile//.library1./.library2.}" ]]; then
+  if [[ ${swift_crash} == 0 ]] && [[ ${files_to_compile} =~ \.library1\. ]] && [[ -f ${files_to_compile//.library1./.library2.} ]]; then
     source_file_using_library=${files_to_compile//.library1./.library2.}
     compilation_comment=""
     rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
@@ -106,13 +106,13 @@ test_file() {
     if [[ ${err_1} != ${err_2} ]]; then
       swift_crash=1
       compilation_comment="script"
-      output="${output_1}${output_2}"
+      output=${output_1}${output_2}
     fi
   fi
   normalized_stacktrace=$(egrep "0x[0-9a-f]" <<< "${output}" | sed "s/0x[0-9a-f]*//g" | sed "s/\+ [0-9]*$//g" | awk "{ print \$3 }" | cut -f1 -d"(" | cut -f1 -d"<" | uniq)
   checksum=$(shasum <<< "${normalized_stacktrace}" | head -c10)
   is_dupe=0
-  if [[ "${normalized_stacktrace}" == "" ]]; then
+  if [[ ${normalized_stacktrace} == "" ]]; then
     checksum="        "
   else
     if [[ ${seen_checksums} =~ ${checksum} ]]; then
@@ -142,8 +142,8 @@ test_file() {
 }
 
 run_tests_in_directory() {
-  header="$1"
-  path="$2"
+  header=$1
+  path=$2
   printf "%b" "== ${color_bold}${header}${color_normal_display} ==\n"
   echo
   found_tests=0
