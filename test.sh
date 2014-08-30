@@ -1,6 +1,7 @@
 #!/bin/bash
 # Style guide: https://google-styleguide.googlecode.com/svn/trunk/shell.xml
 # Shell lint: http://www.shellcheck.net/
+# Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
 
 swiftc_version=$(xcrun swiftc -version | cut -f2 -d"(" | cut -f1 -d")" | head -1)
 xcode_path=$(xcode-select -p)
@@ -31,7 +32,7 @@ color_bold="\e[1m"
 color_normal_display="\e[0m"
 
 argument_files=$*
-name_size=$((columns - 27))
+name_size=$((columns - 25))
 num_tests=0
 num_crashed=0
 seen_checksums=""
@@ -61,13 +62,14 @@ test_file() {
   test_name=${test_name//.library1/}
   test_name=${test_name//.script/}
   test_name=${test_name//.timeout/}
-  # Tip: Want to see details of the type checker's reasoning? Compile with "xcrun swiftc -Xfrontend -debug-constraints"
   swift_crash=0
+  # Test mode 1. Compile using swiftc without any optimizations ("-Onone").
   output=$(xcrun swiftc -Onone -o /dev/null ${files_to_compile} 2>&1)
   if [[ ${output} =~ (error:\ unable\ to\ execute\ command:\ Segmentation\ fault:|LLVM\ ERROR:|While\ emitting\ IR\ for\ source\ file) ]]; then
     swift_crash=1
   fi
   compilation_comment=""
+  # Test mode 2. Compile using swiftc with optimization option "-O".
   if [[ ${swift_crash} == 0 ]]; then
     output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
     compilation_comment="-O"
@@ -75,6 +77,8 @@ test_file() {
       swift_crash=1
     fi
   fi
+  # Test mode 3. Compile with file #1 as a library and file #2 as a library user.
+  #              Used for test cases named *.library{1,2}.swift.
   if [[ ${swift_crash} == 0 ]] && [[ ${files_to_compile} =~ \.library1\. ]] && [[ -f ${files_to_compile//.library1./.library2.} ]]; then
     source_file_using_library=${files_to_compile//.library1./.library2.}
     compilation_comment=""
@@ -91,6 +95,8 @@ test_file() {
     fi
     rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
   fi
+  # Test mode 4. Run Swift code and catch a portential hang (infinite running time).
+  #              Used for test cases named *.timeout.swift.
   if [[ ${swift_crash} == 0 ]] && [[ ${files_to_compile} =~ \.timeout\. ]]; then
     execute_with_timeout 5 "xcrun swift ${files_to_compile}"
     if [[ $? == 1 ]]; then
@@ -98,8 +104,10 @@ test_file() {
       compilation_comment="timeout"
     fi
   fi
+  # Test mode 4. Run Swift code both using -Onone and -O and watch for differences.
+  #              Used for test cases named *.script.swift.
   if [[ ${swift_crash} == 0 ]] && [[ ${files_to_compile} =~ \.script\. ]]; then
-    output_1=$(xcrun swift ${files_to_compile} 2>&1)
+    output_1=$(xcrun swift -Onone ${files_to_compile} 2>&1)
     err_1=$?
     output_2=$(xcrun swift -O ${files_to_compile} 2>&1)
     err_2=$?
@@ -127,9 +135,9 @@ test_file() {
     num_crashed=$((num_crashed + 1))
     dupe_text="      "
     if [[ ${is_dupe} == 1 ]]; then
-      dupe_text="*DUPE*"
+      dupe_text="dupe?"
     fi
-    printf "  %b  %-${name_size}.${name_size}b %-6.6b (%-10.10b)\n" "${color_red}✘${color_normal_display}" "${test_name}" "${dupe_text}" "${checksum}"
+    printf "  %b  %-${name_size}.${name_size}b %-5.5b (%-10.10b)\n" "${color_red}✘${color_normal_display}" "${test_name}" "${dupe_text}" "${checksum}"
   else
     printf "  %b  %-${name_size}.${name_size}b\n" "${color_green}✓${color_normal_display}" "${test_name}"
   fi
