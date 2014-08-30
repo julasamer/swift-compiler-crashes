@@ -59,7 +59,7 @@ Usage: ./test.sh [-v] [-c<columns>] [file ...]
   ✘  036 lisp style                                                (bfa18d7b9c)
   ✘  037 exit code depends on optimization level (script)          (97f491bfbd)
   ✘  038 hang on init of recursive generic type (timeout)          (          )
-  ✘  039 string join (script)                                dupe? (97f491bfbd)
+  ✘  039 string join (script) (dupe?)                              (97f491bfbd)
   ✘  040 optional in generics                                      (84ebab2f2a)
   ✘  041 combo of generic struct func and protocol                 (372cb36d5e)
 

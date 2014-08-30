@@ -32,7 +32,7 @@ color_bold="\e[1m"
 color_normal_display="\e[0m"
 
 argument_files=$*
-name_size=$((columns - 25))
+name_size=$((columns - 19))
 num_tests=0
 num_crashed=0
 seen_checksums=""
@@ -133,11 +133,12 @@ test_file() {
       test_name="${test_name} (${compilation_comment})"
     fi
     num_crashed=$((num_crashed + 1))
-    dupe_text="      "
+    adjusted_name_size=${name_size}
     if [[ ${is_dupe} == 1 ]]; then
-      dupe_text="dupe?"
+      test_name="${test_name} (${color_bold}dupe?${color_normal_display})"
+      adjusted_name_size=$((adjusted_name_size + 8))
     fi
-    printf "  %b  %-${name_size}.${name_size}b %-5.5b (%-10.10b)\n" "${color_red}✘${color_normal_display}" "${test_name}" "${dupe_text}" "${checksum}"
+    printf "  %b  %-${adjusted_name_size}.${adjusted_name_size}b (%-10.10b)\n" "${color_red}✘${color_normal_display}" "${test_name}" "${checksum}"
   else
     printf "  %b  %-${name_size}.${name_size}b\n" "${color_green}✓${color_normal_display}" "${test_name}"
   fi
