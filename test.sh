@@ -32,7 +32,7 @@ color_bold="\e[1m"
 color_normal_display="\e[0m"
 
 argument_files=$*
-name_size=$((columns - 19))
+name_size=$((columns - 20))
 if [[ ${name_size} -lt 35 ]]; then
   name_size=35
 fi
