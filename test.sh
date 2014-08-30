@@ -61,8 +61,8 @@ test_file() {
   num_tests=$((num_tests + 1))
   test_name=$(basename -s ".swift" "${path}")
   test_name=${test_name//-/ }
-  test_name=${test_name//.part1/}
   test_name=${test_name//.library1/}
+  test_name=${test_name//.part1/}
   test_name=${test_name//.script/}
   test_name=${test_name//.timeout/}
   swift_crash=0
@@ -82,7 +82,7 @@ test_file() {
   fi
   # Test mode 3. Compile with file #1 as a library and file #2 as a library user.
   #              Used for test cases named *.library{1,2}.swift.
-  if [[ ${swift_crash} == 0 ]] && [[ ${files_to_compile} =~ \.library1\. ]] && [[ -f ${files_to_compile//.library1./.library2.} ]]; then
+  if [[ ${swift_crash} == 0 && ${files_to_compile} =~ \.library1\. && -f ${files_to_compile//.library1./.library2.} ]]; then
     source_file_using_library=${files_to_compile//.library1./.library2.}
     compilation_comment=""
     rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
@@ -91,7 +91,7 @@ test_file() {
       output=$(xcrun -sdk macosx swiftc "${source_file_using_library}" -o /dev/null -I . -L . -Xlinker -rpath -Xlinker @executable_path/ 2>&1)
       if [[ ${output} =~ (error:\ unable\ to\ execute\ command:\ Segmentation fault:|LLVM\ ERROR:|While\ emitting\ IR\ for\ source\ file) ]]; then
         swift_crash=1
-      elif [[ ! ${output} =~ implicit\ entry/start\ for\ main\ executable ]] && [[ ${output} =~ error:\ linker\ command\ failed\ with\ exit\ code\ 1 ]]; then
+      elif [[ ! ${output} =~ implicit\ entry/start\ for\ main\ executable && ${output} =~ error:\ linker\ command\ failed\ with\ exit\ code\ 1 ]]; then
         swift_crash=1
       fi
       compilation_comment="lib"
@@ -100,7 +100,7 @@ test_file() {
   fi
   # Test mode 4. Run Swift code and catch a portential hang (infinite running time).
   #              Used for test cases named *.timeout.swift.
-  if [[ ${swift_crash} == 0 ]] && [[ ${files_to_compile} =~ \.timeout\. ]]; then
+  if [[ ${swift_crash} == 0 && ${files_to_compile} =~ \.timeout\. ]]; then
     execute_with_timeout 5 "xcrun swift ${files_to_compile}"
     if [[ $? == 1 ]]; then
       swift_crash=1
@@ -109,7 +109,7 @@ test_file() {
   fi
   # Test mode 4. Run Swift code both using -Onone and -O and watch for differences.
   #              Used for test cases named *.script.swift.
-  if [[ ${swift_crash} == 0 ]] && [[ ${files_to_compile} =~ \.script\. ]]; then
+  if [[ ${swift_crash} == 0 && ${files_to_compile} =~ \.script\. ]]; then
     output_1=$(xcrun swift -Onone ${files_to_compile} 2>&1)
     err_1=$?
     output_2=$(xcrun swift -O ${files_to_compile} 2>&1)
@@ -166,7 +166,7 @@ run_tests_in_directory() {
     fi
   done
   if [[ ${found_tests} == 0 ]]; then
-      printf "  %b  %-${name_size}.${name_size}b\n" "${color_green}✓${color_normal_display}" "No tests found."
+    printf "  %b  %-${name_size}.${name_size}b\n" "${color_green}✓${color_normal_display}" "No tests found."
   fi
   echo
 }
