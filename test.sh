@@ -69,6 +69,7 @@ test_file() {
   test_name=${test_name//.timeout/}
   swift_crash=0
   compilation_comment=""
+  output=""
   # Test mode 1. Run Swift code and catch a portential hang (infinite running time).
   #              Used for test cases named *.timeout.swift.
   if [[ ${swift_crash} == 0 && ${files_to_compile} =~ \.timeout\. ]]; then
