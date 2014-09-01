@@ -1,10 +1,10 @@
 // Test case submitted to project by https://github.com/jvasileff (John Vasileff)
 
-protocol P {
-    typealias Element
+protocol A {
+    typealias B
 }
 
-class C<E> {
-    init <P: P where P.Element == E>(param: P.Element) {
+class C<D> {
+    init <A: A where A.B == D>(param: A.B) {
     }
 }
