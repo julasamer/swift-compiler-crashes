@@ -5,6 +5,6 @@ protocol A {
 }
 
 class C<D> {
-    init <A: A where A.B == D>(param: A.B) {
+    init <A: A where A.B == D>(e: A.B) {
     }
 }
