@@ -84,14 +84,15 @@ test_file() {
     output=$(xcrun swiftc -Onone -o /dev/null ${files_to_compile} 2>&1)
     if [[ ${output} =~ (error:\ unable\ to\ execute\ command:\ Segmentation\ fault:|LLVM\ ERROR:|While\ emitting\ IR\ for\ source\ file) ]]; then
       swift_crash=1
+      compilation_comment=""
     fi
   fi
   # Test mode 3. Compile using swiftc with optimization option "-O".
   if [[ ${swift_crash} == 0 ]]; then
     output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
-    compilation_comment="-O"
     if [[ ${output} =~ (error:\ unable\ to\ execute\ command:\ Segmentation fault:|LLVM\ ERROR:|While\ emitting\ IR\ for\ source\ file) ]]; then
       swift_crash=1
+      compilation_comment="-O"
     fi
   fi
   # Test mode 4. Compile with file #1 as a library and file #2 as a library user.
@@ -99,18 +100,30 @@ test_file() {
   if [[ ${swift_crash} == 0 && ${files_to_compile} =~ \.library1\. && -f ${files_to_compile//.library1./.library2.} ]]; then
     source_file_using_library=${files_to_compile//.library1./.library2.}
     compilation_comment=""
-    rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
+    rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib libDummyModule.app
     output=$(xcrun -sdk macosx swiftc -emit-library -o libDummyModule.dylib -Xlinker -install_name -Xlinker @rpath/libDummyModule.dylib -emit-module -emit-module-path DummyModule.swiftmodule -module-name DummyModule -module-link-name DummyModule "${files_to_compile}" 2>&1)
     if [[ $? == 0 ]]; then
-      output=$(xcrun -sdk macosx swiftc "${source_file_using_library}" -o /dev/null -I . -L . -Xlinker -rpath -Xlinker @executable_path/ 2>&1)
+      output=$(xcrun -sdk macosx swiftc "${source_file_using_library}" -o libDummyModule.app -I . -L . -Xlinker -rpath -Xlinker @executable_path/ 2>&1)
       if [[ ${output} =~ (error:\ unable\ to\ execute\ command:\ Segmentation fault:|LLVM\ ERROR:|While\ emitting\ IR\ for\ source\ file) ]]; then
         swift_crash=1
+        compilation_comment="lib I"
       elif [[ ! ${output} =~ implicit\ entry/start\ for\ main\ executable && ${output} =~ error:\ linker\ command\ failed\ with\ exit\ code\ 1 ]]; then
         swift_crash=1
+        compilation_comment="lib II"
       fi
-      compilation_comment="lib"
+      if [[ ${swift_crash} == 0 ]]; then
+        output_1=$(./libDummyModule.app 2>&1)
+        exit_1=$?
+        output_2=$(xcrun swift -I . ${source_file_using_library} 2>&1)
+        exit_2=$?
+        if [[ ${exit_1} != ${exit_2} ]]; then
+            swift_crash=1
+            output="${output_1}${output_2}"
+            compilation_comment="lib III"
+        fi
+      fi
     fi
-    rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib
+    rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib libDummyModule.app
   fi
   # Test mode 5. Run Swift code both using -Onone and -O and watch for differences.
   #              Used for test cases named *.script.swift.
