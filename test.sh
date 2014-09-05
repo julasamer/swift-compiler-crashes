@@ -65,13 +65,14 @@ test_file() {
   test_name=${test_name//-/ }
   test_name=${test_name//.library1/}
   test_name=${test_name//.part1/}
+  test_name=${test_name//.repl/}
   test_name=${test_name//.script/}
   test_name=${test_name//.timeout/}
   swift_crash=0
   compilation_comment=""
   output=""
-  # Test mode 1. Run Swift code and catch a portential hang (infinite running time).
-  #              Used for test cases named *.timeout.swift.
+  # Test mode: Run Swift code and catch a portential hang (infinite running time).
+  #            Used for test cases named *.timeout.swift.
   if [[ ${swift_crash} == 0 && ${files_to_compile} =~ \.timeout\. ]]; then
     execute_with_timeout 5 "xcrun swift ${files_to_compile}" > /dev/null 2> /dev/null
     if [[ $? == 1 ]]; then
@@ -79,7 +80,18 @@ test_file() {
       compilation_comment="timeout"
     fi
   fi
-  # Test mode 2. Compile using swiftc without any optimizations ("-Onone").
+  # Test mode: Run in Swift code in REPL and catch segmentation fault.
+  #            Used for test cases named *.repl.swift.
+  if [[ ${swift_crash} == 0 && ${files_to_compile} =~ \.repl\. ]]; then
+    # Run in subshell to avoid having "Segmentation fault" being written to console.
+    bash -c "xcrun swift < ${files_to_compile} > /dev/null 2> /dev/null" > /dev/null 2> /dev/null
+    if [[ $? != 0 ]]; then
+      swift_crash=1
+      compilation_comment="repl"
+    fi
+  fi
+  # Test mode: Compile using swiftc without any optimizations ("-Onone").
+  #            Used for test cases named *.swift.
   if [[ ${swift_crash} == 0 ]]; then
     output=$(xcrun swiftc -Onone -o /dev/null ${files_to_compile} 2>&1)
     if [[ ${output} =~ (error:\ unable\ to\ execute\ command:\ Segmentation\ fault:|LLVM\ ERROR:|While\ emitting\ IR\ for\ source\ file) ]]; then
@@ -87,7 +99,8 @@ test_file() {
       compilation_comment=""
     fi
   fi
-  # Test mode 3. Compile using swiftc with optimization option "-O".
+  # Test mode: Compile using swiftc with optimization option "-O".
+  #            Used for test cases named *.swift.
   if [[ ${swift_crash} == 0 ]]; then
     output=$(xcrun swiftc -O -o /dev/null ${files_to_compile} 2>&1)
     if [[ ${output} =~ (error:\ unable\ to\ execute\ command:\ Segmentation fault:|LLVM\ ERROR:|While\ emitting\ IR\ for\ source\ file) ]]; then
@@ -95,8 +108,8 @@ test_file() {
       compilation_comment="-O"
     fi
   fi
-  # Test mode 4. Compile with file #1 as a library and file #2 as a library user.
-  #              Used for test cases named *.library{1,2}.swift.
+  # Test mode: Compile with file #1 as a library and file #2 as a library user.
+  #            Used for test cases named *.library{1,2}.swift.
   if [[ ${swift_crash} == 0 && ${files_to_compile} =~ \.library1\. && -f ${files_to_compile//.library1./.library2.} ]]; then
     source_file_using_library=${files_to_compile//.library1./.library2.}
     compilation_comment=""
@@ -125,8 +138,8 @@ test_file() {
     fi
     rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib libDummyModule.app
   fi
-  # Test mode 5. Run Swift code both using -Onone and -O and watch for differences.
-  #              Used for test cases named *.script.swift.
+  # Test mode: Run Swift code both using -Onone and -O and watch for differences.
+  #            Used for test cases named *.script.swift.
   if [[ ${swift_crash} == 0 && ${files_to_compile} =~ \.script\. ]]; then
     output_1=$(xcrun swift -Onone ${files_to_compile} 2>&1)
     err_1=$?
