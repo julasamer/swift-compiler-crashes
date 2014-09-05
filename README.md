@@ -59,6 +59,7 @@ Usage: ./test.sh [-v] [-c<columns>] [file ...]
   ✘  043 type parameter and param from typealias                  (804f7c6fe3)
   ✘  044 string range subscript (lib III) (dupe?)                 (97f491bfbd)
   ✘  045 self executing closure                                   (2d0f32deb0)
+  ✘  046 any array containing ints (repl)                         (          )
 
 == Crashes marked as fixed in previous releases ==
 
@@ -70,7 +71,7 @@ Usage: ./test.sh [-v] [-c<columns>] [file ...]
   ✓  038 hang on init of recursive generic type
   ✓  039 string join
 
-** Results: 38 of 45 tests crashed the compiler **
+** Results: 39 of 46 tests crashed the compiler **
 
 ```
 
@@ -79,7 +80,7 @@ Contributor hall of fame
 
 | GitHub contributor | Twitter | Cases contributed | Started contributing |
 | :----------------- | :------ | ----------------: | -------------------: |
-| <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 35 test cases | Xcode6-Beta6 |
+| <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 36 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/tmu">tmu</a> – Teemu Kurppa | <a href="https://twitter.com/Teemu">@Teemu</a> | 4 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/jvasileff">jvasileff</a> – John Vasileff | <a href="https://twitter.com/jvasileff">@jvasileff</a> | 2 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/0xc010d">0xc010d</a> – Ievgen Solodovnykov | <a href="https://twitter.com/0xc010d">@0xc010d</a> | 1 test case | Xcode6-Beta6 |
