@@ -66,6 +66,7 @@ test_file() {
   test_name=${test_name//.library1/}
   test_name=${test_name//.part1/}
   test_name=${test_name//.repl/}
+  test_name=${test_name//.runtime/}
   test_name=${test_name//.script/}
   test_name=${test_name//.timeout/}
   swift_crash=0
@@ -137,6 +138,15 @@ test_file() {
       fi
     fi
     rm -f DummyModule.swiftdoc DummyModule.swiftmodule libDummyModule.dylib libDummyModule.app
+  fi
+  # Test mode: Run Swift code and watch for runtime error.
+  #            Used for test cases named *.runtime.swift.
+  if [[ ${swift_crash} == 0 && ${files_to_compile} =~ \.runtime\. ]]; then
+    output=$(xcrun swift -Onone ${files_to_compile} 2>&1)
+    if [[ ${output} =~ llvm::sys::PrintStackTrace ]]; then
+      swift_crash=1
+      compilation_comment="runtime"
+    fi
   fi
   # Test mode: Run Swift code both using -Onone and -O and watch for differences.
   #            Used for test cases named *.script.swift.
