@@ -62,6 +62,7 @@ Usage: ./test.sh [-v] [-c<columns>] [file ...]
   ✘  046 any array containing ints (repl)                         (          )
   ✘  047 enum case with parameterized type and closure            (46ddf80a71)
   ✘  048 unowned self broken if inheriting nsobject (runtime)     (1388803713)
+  ✘  049 type inference with closure expression                   (b860be8df4)
 
 == Crashes marked as fixed in previous releases ==
 
@@ -73,7 +74,7 @@ Usage: ./test.sh [-v] [-c<columns>] [file ...]
   ✓  038 hang on init of recursive generic type
   ✓  039 string join
 
-** Results: 41 of 48 tests crashed the compiler **
+** Results: 42 of 49 tests crashed the compiler **
 
 ```
 
@@ -89,3 +90,4 @@ Contributor hall of fame
 | <a href="https://github.com/AlexDenisov">AlexDenisov</a> – Alexey Denisov | <a href="https://twitter.com/1101_debian">@1101_debian</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/jansabbe">jansabbe</a> – Jan Sabbe | <a href="https://twitter.com/jansabbe">@jansabbe</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/owensd">owensd</a> – David Owens II | <a href="https://twitter.com/owensd">@owensd</a> | 1 test case | Xcode6-Beta6 |
+| <a href="https://github.com/rnapier"></a> – Rob Napier | <a href="https://twitter.com/cocoaphony">@cocoaphony</a> | 1 test case | Xcode6-Beta7 |
