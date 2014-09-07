@@ -90,4 +90,4 @@ Contributor hall of fame
 | <a href="https://github.com/AlexDenisov">AlexDenisov</a> – Alexey Denisov | <a href="https://twitter.com/1101_debian">@1101_debian</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/jansabbe">jansabbe</a> – Jan Sabbe | <a href="https://twitter.com/jansabbe">@jansabbe</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/owensd">owensd</a> – David Owens II | <a href="https://twitter.com/owensd">@owensd</a> | 1 test case | Xcode6-Beta6 |
-| <a href="https://github.com/rnapier"></a> – Rob Napier | <a href="https://twitter.com/cocoaphony">@cocoaphony</a> | 1 test case | Xcode6-Beta7 |
+| <a href="https://github.com/rnapier">rnapier</a> – Rob Napier | <a href="https://twitter.com/cocoaphony">@cocoaphony</a> | 1 test case | Xcode6-Beta7 |
