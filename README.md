@@ -28,7 +28,7 @@ Usage: ./test.sh [-v] [-c<columns>] [file ...]
   ✘  005 recursive call                                           (446073f2f9)
   ✘  006 placeholder property initializer with closure            (6f675588c7)
   ✘  008 boolean operator                                         (43d38f379a)
-  ✘  011 protocol class func dot type                             (94cca82b59)
+  ✘  011 protocol class func dot type                             (3395cd089c)
   ✘  012 fixpoint of higher order function                        (f05d6fb24b)
   ✘  013 dynamic type                                             (439f134fd7)
   ✘  015 generic enum referencing itself in case                  (          )
@@ -59,6 +59,7 @@ Usage: ./test.sh [-v] [-c<columns>] [file ...]
   ✘  047 enum case with parameterized type and closure            (a58e03d297)
   ✘  048 unowned self broken if inheriting nsobject (runtime)     (f42d9062cf)
   ✘  049 type inference with closure expression                   (b860be8df4)
+  ✘  051 type specifier inside curry                              (e0958076f3)
 
 == Crashes marked as fixed in previous releases ==
 
@@ -75,7 +76,7 @@ Usage: ./test.sh [-v] [-c<columns>] [file ...]
   ✓  044 string range subscript
   ✓  050 protocols with circular typealiases
 
-** Results: 38 of 50 tests crashed the compiler **
+** Results: 39 of 51 tests crashed the compiler **
 
 ```
 
@@ -87,8 +88,8 @@ Contributor hall of fame
 | <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 39 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/tmu">tmu</a> – Teemu Kurppa | <a href="https://twitter.com/Teemu">@Teemu</a> | 4 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/jvasileff">jvasileff</a> – John Vasileff | <a href="https://twitter.com/jvasileff">@jvasileff</a> | 2 test cases | Xcode6-Beta6 |
+| <a href="https://github.com/rnapier">rnapier</a> – Rob Napier | <a href="https://twitter.com/cocoaphony">@cocoaphony</a> | 2 test cases | Xcode6-Beta7 |
 | <a href="https://github.com/0xc010d">0xc010d</a> – Ievgen Solodovnykov | <a href="https://twitter.com/0xc010d">@0xc010d</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/AlexDenisov">AlexDenisov</a> – Alexey Denisov | <a href="https://twitter.com/1101_debian">@1101_debian</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/jansabbe">jansabbe</a> – Jan Sabbe | <a href="https://twitter.com/jansabbe">@jansabbe</a> | 1 test case | Xcode6-Beta6 |
 | <a href="https://github.com/owensd">owensd</a> – David Owens II | <a href="https://twitter.com/owensd">@owensd</a> | 1 test case | Xcode6-Beta6 |
-| <a href="https://github.com/rnapier">rnapier</a> – Rob Napier | <a href="https://twitter.com/cocoaphony">@cocoaphony</a> | 1 test case | Xcode6-Beta7 |
