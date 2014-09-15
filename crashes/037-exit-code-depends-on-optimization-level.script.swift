@@ -1,9 +1,4 @@
 // Test case submitted to project by https://github.com/practicalswift (practicalswift)
+// https://twitter.com/practicalswift/status/505081081909878784
 
-struct c<d : SequenceType> {
-    var b: d
-}
-
-func a<d>() -> [c<d>] {
-    return []
-}
+assert(false)

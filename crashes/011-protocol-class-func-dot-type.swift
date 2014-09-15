@@ -1,7 +1,12 @@
 // Test case submitted to project by https://github.com/practicalswift (practicalswift)
 
-class c {
-    func b((Any, c))(a: (Any, AnyObject)) {
-        b(a)
+protocol b {
+    class func e()
+}
+
+struct c {
+    var d: b.Type
+    func e() {
+        d.e()
     }
 }

@@ -1,9 +1,10 @@
 // Test case submitted to project by https://github.com/practicalswift (practicalswift)
 
-struct c<d : SequenceType> {
-    var b: d
+protocol b {
+    var a: c<b> {
+        get
+    }
 }
 
-func a<d>() -> [c<d>] {
-    return []
+class c<d : b> {
 }

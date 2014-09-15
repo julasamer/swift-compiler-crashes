@@ -1,9 +1,8 @@
 // Test case submitted to project by https://github.com/practicalswift (practicalswift)
+// http://www.openradar.me/17330553
 
-struct c<d : SequenceType> {
-    var b: d
-}
-
-func a<d>() -> [c<d>] {
-    return []
+class a<T> {
+    enum b {
+        case c
+    }
 }

@@ -1,7 +1,9 @@
-func initializer(closure: () -> ()) {
+// Test case submitted to project by https://github.com/AlexDenisov (Alexey Denisov)
+
+func i(c: () -> ()) {
 }
 
-class Crash {
-    var _ = initializer() {
+class a {
+    var _ = i() {
     }
 }
