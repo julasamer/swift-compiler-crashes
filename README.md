@@ -60,6 +60,7 @@ Usage: ./test.sh [-v] [-c<columns>] [file ...]
   ✘  048 unowned self broken if inheriting nsobject (runtime)     (f42d9062cf)
   ✘  049 type inference with closure expression                   (b860be8df4)
   ✘  051 type specifier inside curry                              (e0958076f3)
+  ✘  052 types declared in block and used via higher order func   (          )
 
 == Crashes marked as fixed in previous releases ==
 
@@ -76,7 +77,7 @@ Usage: ./test.sh [-v] [-c<columns>] [file ...]
   ✓  044 string range subscript
   ✓  050 protocols with circular typealiases
 
-** Results: 39 of 51 tests crashed the compiler **
+** Results: 40 of 52 tests crashed the compiler **
 
 ```
 
@@ -85,7 +86,7 @@ Contributor hall of fame
 
 | GitHub contributor | Twitter | Cases contributed | Started contributing |
 | :----------------- | :------ | ----------------: | -------------------: |
-| <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 39 test cases | Xcode6-Beta6 |
+| <a href="https://github.com/practicalswift">practicalswift</a> – practicalswift | <a href="https://twitter.com/practicalswift">@practicalswift</a> | 40 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/tmu">tmu</a> – Teemu Kurppa | <a href="https://twitter.com/Teemu">@Teemu</a> | 4 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/jvasileff">jvasileff</a> – John Vasileff | <a href="https://twitter.com/jvasileff">@jvasileff</a> | 2 test cases | Xcode6-Beta6 |
 | <a href="https://github.com/rnapier">rnapier</a> – Rob Napier | <a href="https://twitter.com/cocoaphony">@cocoaphony</a> | 2 test cases | Xcode6-Beta7 |
